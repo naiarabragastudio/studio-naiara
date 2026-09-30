@@ -2458,3 +2458,20 @@ footer p a {
 footer p a:hover {
     color: #f0d9a0;
 }
+/* =====================================================
+   TESTE AGENDAMENTO
+===================================================== */
+
+.cart-drawer {
+    z-index: 99999 !important;
+}
+
+.cart-overlay {
+    z-index: 99998 !important;
+}
+
+.cart-drawer.active {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
