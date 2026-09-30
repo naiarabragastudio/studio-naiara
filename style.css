@@ -1,0 +1,2460 @@
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background: #0b0b0b;
+    color: #f5f1e8;
+    line-height: 1.6;
+}
+
+body.cart-open {
+    overflow: hidden;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* =====================================================
+   VARIÁVEIS
+===================================================== */
+
+:root {
+    --bg: #0b0b0b;
+    --bg-light: #121212;
+    --bg-card: #171717;
+
+    --dark: #050505;
+    --dark-soft: #1c1c1c;
+
+    --gold: #c9a45c;
+    --gold-light: #e3c77f;
+    --gold-dark: #9f7938;
+
+    --text: #f4f0e8;
+    --text-soft: #d4cec3;
+    --muted: #9d968d;
+
+    --white: #ffffff;
+
+    --border: rgba(201, 164, 92, 0.28);
+
+    --shadow:
+        0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container {
+    width: min(1180px, 92%);
+    margin: 0 auto;
+}
+
+
+/* =====================================================
+   SEÇÕES
+===================================================== */
+
+.section {
+    padding: 100px 0;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+
+    background: rgba(5, 5, 5, 0.96);
+
+    backdrop-filter: blur(14px);
+
+    border-bottom:
+        1px solid rgba(201, 164, 92, 0.18);
+}
+
+.nav-container {
+    min-height: 82px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex-shrink: 0;
+}
+
+.logo span {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 26px;
+    font-weight: 600;
+
+    letter-spacing: 3px;
+
+    color: var(--gold-light);
+}
+
+.logo small {
+    color: #aaa29a;
+
+    font-size: 8px;
+    letter-spacing: 3px;
+    font-weight: 500;
+}
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.nav > a {
+    position: relative;
+
+    color: #e2ddd4;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    transition: 0.3s ease;
+}
+
+.nav > a:hover {
+    color: var(--gold-light);
+}
+
+.nav > a::after {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+
+    width: 0;
+    height: 1px;
+
+    background: var(--gold);
+
+    transition: 0.3s ease;
+}
+
+.nav > a:hover::after {
+    width: 100%;
+}
+
+
+/* =====================================================
+   MENU MOBILE
+===================================================== */
+
+.menu-button {
+    display: none;
+
+    border: 0;
+    background: transparent;
+
+    color: var(--gold-light);
+
+    font-size: 24px;
+}
+
+
+/* =====================================================
+   BOTÃO CARRINHO
+===================================================== */
+
+.cart-button {
+    border: 1px solid rgba(201, 164, 92, 0.55);
+
+    background: transparent;
+
+    color: var(--gold-light);
+
+    padding: 10px 15px;
+
+    border-radius: 30px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 11px;
+
+    transition: 0.3s ease;
+}
+
+.cart-button:hover {
+    background: var(--gold);
+
+    color: #080808;
+
+    border-color: var(--gold);
+}
+
+.cart-button b {
+    min-width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    background: var(--gold);
+
+    color: #080808;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero {
+    min-height: 100vh;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 75% 35%,
+            rgba(201, 164, 92, 0.13),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #050505 0%,
+            #15120e 50%,
+            #050505 100%
+        );
+}
+
+.hero::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 20% 70%,
+            rgba(201, 164, 92, 0.07),
+            transparent 30%
+        );
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.96),
+            rgba(0, 0, 0, 0.48),
+            rgba(0, 0, 0, 0.9)
+        );
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+
+    padding-top: 80px;
+}
+
+.hero-subtitle {
+    color: var(--gold-light);
+
+    font-size: 12px;
+    letter-spacing: 5px;
+
+    font-weight: 500;
+
+    margin-bottom: 18px;
+}
+
+
+/* =====================================================
+   NOME PRINCIPAL
+===================================================== */
+
+.hero h1 {
+    font-family: "Cormorant Garamond", serif;
+
+    color: var(--white);
+
+    /*
+       UMA ÚNICA LINHA
+    */
+    white-space: nowrap;
+
+    font-size: clamp(55px, 8.5vw, 125px);
+
+    line-height: 0.9;
+
+    font-weight: 500;
+
+    letter-spacing: 3px;
+}
+
+.hero h1 span {
+    display: inline;
+
+    color: var(--gold-light);
+}
+
+.gold-line {
+    width: 75px;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--gold-dark),
+            var(--gold-light)
+        );
+
+    margin: 25px 0;
+}
+
+.hero-text {
+    max-width: 520px;
+
+    color: #c8c1b7;
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+.hero-buttons {
+    display: flex;
+
+    gap: 14px;
+
+    margin-top: 35px;
+}
+
+
+/* =====================================================
+   BOTÕES
+===================================================== */
+
+.btn {
+    border: 0;
+
+    min-height: 48px;
+
+    padding: 0 25px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    border-radius: 2px;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    transition: 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--gold);
+
+    color: #080808;
+}
+
+.btn-primary:hover {
+    background: var(--gold-light);
+
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: transparent;
+
+    color: var(--gold-light);
+
+    border:
+        1px solid rgba(201, 164, 92, 0.5);
+}
+
+.btn-outline:hover {
+    background: var(--gold);
+
+    color: #080808;
+
+    border-color: var(--gold);
+}
+
+
+/* =====================================================
+   SCROLL
+===================================================== */
+
+.scroll-indicator {
+    position: absolute;
+
+    bottom: 30px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    color: var(--gold-light);
+
+    animation: scrollDown 1.8s infinite;
+}
+
+@keyframes scrollDown {
+    0%,
+    100% {
+        transform: translate(-50%, 0);
+    }
+
+    50% {
+        transform: translate(-50%, 8px);
+    }
+}
+
+
+/* =====================================================
+   TÍTULOS
+===================================================== */
+
+.section-heading {
+    margin-bottom: 55px;
+}
+
+.section-heading.center {
+    text-align: center;
+}
+
+.section-heading.center .gold-line {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.eyebrow {
+    display: block;
+
+    color: var(--gold-light);
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 12px;
+}
+
+.section-heading h2,
+.naiara-title h2,
+.spa-text h2 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: clamp(40px, 5vw, 62px);
+
+    font-weight: 500;
+
+    line-height: 1;
+
+    color: var(--text);
+}
+
+.section-heading p {
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+.intro {
+    background: #101010;
+}
+
+.intro-content {
+    max-width: 850px;
+
+    text-align: center;
+}
+
+.intro .section-heading {
+    margin-bottom: 35px;
+}
+
+.intro .gold-line {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.intro p {
+    color: #bdb6ad;
+
+    font-size: 15px;
+
+    line-height: 2;
+
+    margin-bottom: 15px;
+}
+
+
+/* =====================================================
+   SERVIÇOS
+===================================================== */
+
+.services {
+    background: #0b0b0b;
+}
+
+.service-categories {
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 16px;
+}
+
+.category-card {
+    min-height: 260px;
+
+    padding: 30px 22px;
+
+    background: #141414;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.22);
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+
+    transition: 0.35s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow:
+        0 20px 45px rgba(0, 0, 0, 0.55);
+
+    border-color: var(--gold);
+}
+
+.category-icon {
+    width: 58px;
+    height: 58px;
+
+    border:
+        1px solid var(--gold);
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--gold-light);
+
+    font-size: 20px;
+
+    margin-bottom: 20px;
+}
+
+.category-card h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 27px;
+
+    color: #f5f1e8;
+
+    font-weight: 600;
+
+    margin-bottom: 10px;
+}
+
+.category-card p {
+    color: #aaa39a;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+
+    flex: 1;
+}
+
+.category-card span {
+    color: var(--gold-light);
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    font-weight: 600;
+
+    margin-top: 20px;
+}
+
+
+/* =====================================================
+   NAIARA
+===================================================== */
+
+.naiara-section {
+    background:
+        linear-gradient(
+            135deg,
+            #070707,
+            #16130f,
+            #080808
+        );
+
+    color: var(--white);
+}
+
+.naiara-content {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 70px;
+
+    align-items: center;
+}
+
+.naiara-title h2 {
+    color: var(--gold-light);
+
+    font-size: clamp(48px, 6vw, 75px);
+
+    letter-spacing: 2px;
+}
+
+.naiara-title p {
+    max-width: 450px;
+
+    color: #b8b0a5;
+
+    font-size: 14px;
+
+    line-height: 1.9;
+}
+
+.naiara-photo {
+    position: relative;
+
+    max-width: 480px;
+
+    margin-left: auto;
+}
+
+/*
+   NOVO DESTAQUE DA FOTO
+   Dourado + bronze escuro
+*/
+
+.naiara-photo::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -12px;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.65);
+
+    transform: translate(15px, 15px);
+
+    z-index: 0;
+}
+
+.naiara-photo::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 8px;
+
+    border:
+        1px solid rgba(227, 199, 127, 0.18);
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+.naiara-photo img {
+    position: relative;
+
+    z-index: 1;
+
+    width: 100%;
+
+    aspect-ratio: 4 / 5;
+
+    object-fit: cover;
+}
+
+
+/* =====================================================
+   CATÁLOGOS
+===================================================== */
+
+.catalog-section {
+    background: #101010;
+}
+
+.dark-section {
+    background: #080808;
+
+    color: var(--white);
+}
+
+.dark-section .section-heading h2 {
+    color: var(--gold-light);
+}
+
+.dark-section .section-heading p {
+    color: #aaa39a;
+}
+
+.catalog-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+
+/* =====================================================
+   CARDS DE PREÇO
+===================================================== */
+
+.price-card {
+    position: relative;
+
+    padding: 34px 30px;
+
+    background: #171717;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.22);
+
+    min-height: 250px;
+
+    display: flex;
+    flex-direction: column;
+
+    transition: 0.35s ease;
+}
+
+.price-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.5);
+
+    border-color: var(--gold);
+}
+
+.dark-section .price-card {
+    background: #141414;
+
+    border-color:
+        rgba(201, 164, 92, 0.22);
+}
+
+.price-card h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 28px;
+
+    line-height: 1.15;
+
+    font-weight: 600;
+
+    color: #f4f0e8;
+
+    margin: 12px 0;
+}
+
+.dark-section .price-card h3 {
+    color: #f5f1e8;
+}
+
+.description {
+    color: #a7a097;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+
+    margin-bottom: 20px;
+}
+
+.dark-section .description {
+    color: #a7a097;
+}
+
+.price {
+    color: var(--gold-light);
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    margin-top: auto;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   TAGS
+===================================================== */
+
+.service-tag {
+    align-self: flex-start;
+
+    padding: 5px 10px;
+
+    border: 1px solid var(--gold);
+
+    color: var(--gold-light);
+
+    font-size: 8px;
+
+    letter-spacing: 2px;
+
+    font-weight: 700;
+}
+
+.service-tag.natural {
+    color: #a7b28d;
+
+    border-color: #76805f;
+}
+
+.service-tag.delicate {
+    color: #c19bbf;
+
+    border-color: #80617d;
+}
+
+.service-tag.striking {
+    color: var(--gold-light);
+
+    border-color: var(--gold);
+}
+
+
+/* =====================================================
+   CARDS DE CÍLIOS
+===================================================== */
+
+.lash-card {
+    min-height: 310px;
+}
+
+.lash-card .service-button {
+    width: 100%;
+}
+
+
+/* =====================================================
+   BOTÕES DOS SERVIÇOS
+===================================================== */
+
+.service-button {
+    width: 100%;
+
+    min-height: 45px;
+
+    border:
+        1px solid var(--gold);
+
+    background: transparent;
+
+    color: var(--gold-light);
+
+    text-transform: uppercase;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: 1.2px;
+
+    transition: 0.3s ease;
+}
+
+.service-button:hover {
+    background: var(--gold);
+
+    color: #080808;
+}
+
+.dark-section .service-button {
+    color: var(--gold-light);
+
+    border-color:
+        rgba(201, 164, 92, 0.55);
+}
+
+.dark-section .service-button:hover {
+    background: var(--gold);
+
+    color: #080808;
+}
+
+
+/* =====================================================
+   SERVIÇOS SIMPLES
+===================================================== */
+
+.simple-services {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 16px;
+}
+
+.simple-card {
+    background: #151515;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.2);
+
+    padding: 25px;
+
+    display: grid;
+
+    grid-template-columns: 1fr auto;
+
+    align-items: center;
+
+    gap: 20px;
+
+    transition: 0.3s ease;
+}
+
+.simple-card:hover {
+    border-color: var(--gold);
+
+    transform: translateY(-3px);
+}
+
+.simple-card h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 25px;
+
+    font-weight: 600;
+
+    color: #f4f0e8;
+}
+
+.simple-card p {
+    color: #a59e95;
+
+    font-size: 11px;
+}
+
+.simple-card strong {
+    color: var(--gold-light);
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 25px;
+}
+
+.simple-card .service-button {
+    grid-column: 1 / -1;
+}
+
+
+/* =====================================================
+   INFO BOX
+===================================================== */
+
+.info-box {
+    margin-top: 30px;
+
+    padding: 22px;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.22);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    background:
+        rgba(201, 164, 92, 0.05);
+}
+
+.info-box i {
+    color: var(--gold-light);
+}
+
+.info-box p {
+    color: #aaa39a;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   SPA
+===================================================== */
+
+.spa-section {
+    position: relative;
+
+    background:
+        radial-gradient(
+            circle at 80% 50%,
+            rgba(201, 164, 92, 0.12),
+            transparent 35%
+        ),
+        linear-gradient(
+            90deg,
+            #050505,
+            #15120e
+        );
+
+    color: var(--white);
+
+    overflow: hidden;
+}
+
+.spa-content {
+    min-height: 430px;
+
+    display: flex;
+
+    align-items: center;
+}
+
+.spa-text {
+    max-width: 620px;
+}
+
+.spa-text h2 {
+    color: var(--gold-light);
+}
+
+.spa-text p {
+    color: #b4aca1;
+
+    font-size: 14px;
+
+    line-height: 1.9;
+
+    margin-bottom: 25px;
+}
+
+.spa-price {
+    color: var(--gold-light);
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 42px;
+
+    font-weight: 600;
+
+    margin-bottom: 25px;
+}
+
+.spa-text .service-button {
+    max-width: 270px;
+}
+
+
+/* =====================================================
+   ATENDIMENTO
+===================================================== */
+
+.about-section {
+    background: #101010;
+}
+
+.about-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 18px;
+}
+
+.about-card {
+    padding: 30px 25px;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.2);
+
+    text-align: center;
+
+    background: #151515;
+}
+
+.about-card i {
+    color: var(--gold-light);
+
+    font-size: 24px;
+
+    margin-bottom: 18px;
+}
+
+.about-card h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 24px;
+
+    color: #f4f0e8;
+
+    margin-bottom: 10px;
+}
+
+.about-card p {
+    color: #a49d94;
+
+    font-size: 11px;
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   PAGAMENTO
+===================================================== */
+
+.payment-section {
+    background:
+        linear-gradient(
+            135deg,
+            #050505,
+            #17130e
+        );
+
+    color: var(--white);
+}
+
+.payment-section .section-heading h2 {
+    color: var(--gold-light);
+}
+
+.payment-options {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 70px;
+
+    margin-bottom: 30px;
+}
+
+.payment-options div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: #d3ccc2;
+
+    font-size: 13px;
+}
+
+.payment-options i {
+    color: var(--gold-light);
+
+    font-size: 22px;
+}
+
+.no-fiado {
+    text-align: center;
+
+    color: #817a72;
+
+    font-size: 11px;
+}
+
+.no-fiado i {
+    color: var(--gold);
+
+    margin-right: 5px;
+}
+
+
+/* =====================================================
+   AGENDAMENTO
+===================================================== */
+
+.booking-section {
+    background:
+        linear-gradient(
+            135deg,
+            #17130e,
+            #080808
+        );
+
+    border-top:
+        1px solid rgba(201, 164, 92, 0.18);
+
+    border-bottom:
+        1px solid rgba(201, 164, 92, 0.18);
+}
+
+.booking-content {
+    text-align: center;
+
+    max-width: 700px;
+}
+
+.booking-content .eyebrow {
+    color: var(--gold-light);
+}
+
+.booking-content h2 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: clamp(42px, 5vw, 65px);
+
+    font-weight: 500;
+
+    line-height: 1;
+
+    color: var(--gold-light);
+}
+
+.booking-content p {
+    color: #aaa39a;
+
+    font-size: 14px;
+
+    margin: 20px 0 30px;
+}
+
+.booking-content .btn-primary {
+    background: var(--gold);
+
+    color: #080808;
+}
+
+.booking-content .btn-primary:hover {
+    background: var(--gold-light);
+}
+
+
+/* =====================================================
+   CARRINHO - OVERLAY
+===================================================== */
+
+.cart-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.78);
+
+    z-index: 2000;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: 0.35s ease;
+}
+
+.cart-overlay.active {
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+/* =====================================================
+   CARRINHO
+===================================================== */
+
+.cart-drawer {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+
+    width: min(470px, 94%);
+
+    height: 100vh;
+
+    background: #101010;
+
+    z-index: 2100;
+
+    transform: translateX(100%);
+
+    transition: 0.4s ease;
+
+    display: flex;
+
+    flex-direction: column;
+
+    box-shadow:
+        -20px 0 60px rgba(0, 0, 0, 0.65);
+}
+
+.cart-drawer.active {
+    transform: translateX(0);
+}
+
+
+/* =====================================================
+   CABEÇALHO DO CARRINHO
+===================================================== */
+
+.cart-header {
+    padding: 25px;
+
+    background: #050505;
+
+    color: var(--white);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    border-bottom:
+        1px solid rgba(201, 164, 92, 0.2);
+}
+
+.cart-header h2 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 32px;
+
+    font-weight: 500;
+
+    color: var(--gold-light);
+}
+
+.cart-close {
+    width: 38px;
+    height: 38px;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.3);
+
+    background: transparent;
+
+    color: var(--gold-light);
+
+    border-radius: 50%;
+
+    transition: 0.3s ease;
+}
+
+.cart-close:hover {
+    background: var(--gold);
+
+    color: #080808;
+}
+
+
+/* =====================================================
+   CORPO DO CARRINHO
+===================================================== */
+
+.cart-body {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 25px;
+}
+
+
+/* =====================================================
+   ITENS DO CARRINHO
+===================================================== */
+
+.cart-items {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-bottom: 25px;
+}
+
+.cart-item {
+    padding: 17px;
+
+    background: #171717;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.2);
+}
+
+.cart-item-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 15px;
+}
+
+.cart-item h4 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 22px;
+
+    line-height: 1.1;
+
+    color: #f5f1e8;
+}
+
+.cart-item-price {
+    color: var(--gold-light);
+
+    font-weight: 700;
+
+    font-size: 14px;
+}
+
+.cart-item-remove {
+    border: 0;
+
+    background: transparent;
+
+    color: #c77b7b;
+
+    font-size: 12px;
+
+    margin-top: 12px;
+}
+
+.cart-item-remove:hover {
+    color: #e99b9b;
+
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   MANUTENÇÃO
+===================================================== */
+
+.maintenance-selector {
+    margin-top: 15px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid rgba(201, 164, 92, 0.15);
+}
+
+.maintenance-selector label {
+    display: block;
+
+    color: #a9a198;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 7px;
+}
+
+.maintenance-selector select {
+    width: 100%;
+
+    height: 42px;
+
+    padding: 0 12px;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.3);
+
+    background: #0b0b0b;
+
+    color: #f0ebe3;
+
+    outline: none;
+}
+
+.maintenance-selector select:focus {
+    border-color: var(--gold);
+}
+
+
+/* =====================================================
+   FORMULÁRIO
+===================================================== */
+
+.booking-form {
+    margin-top: 20px;
+}
+
+.booking-form-title {
+    margin-bottom: 25px;
+}
+
+.booking-form-title h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 28px;
+
+    line-height: 1.1;
+
+    color: var(--gold-light);
+
+    margin-bottom: 8px;
+}
+
+.booking-form-title p {
+    color: #99928a;
+
+    font-size: 11px;
+}
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+.form-group label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 7px;
+
+    color: #d8d1c7;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.form-group label i {
+    color: var(--gold);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+
+    height: 46px;
+
+    padding: 0 13px;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.25);
+
+    background: #181818;
+
+    color: #f5f1e8;
+
+    outline: none;
+
+    border-radius: 0;
+}
+
+.form-group input::placeholder {
+    color: #77716a;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--gold);
+}
+
+
+/* =====================================================
+   AVISO
+===================================================== */
+
+.booking-notice {
+    padding: 15px;
+
+    background:
+        rgba(201, 164, 92, 0.06);
+
+    border-left:
+        2px solid var(--gold);
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+.booking-notice i {
+    color: var(--gold-light);
+
+    margin-top: 2px;
+}
+
+.booking-notice p {
+    color: #9f988f;
+
+    font-size: 10px;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   CARRINHO VAZIO
+===================================================== */
+
+.cart-empty {
+    text-align: center;
+
+    padding: 35px 15px;
+}
+
+.cart-empty i {
+    color: var(--gold-light);
+
+    font-size: 35px;
+
+    margin-bottom: 15px;
+}
+
+.cart-empty h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 25px;
+
+    color: #f5f1e8;
+}
+
+.cart-empty p {
+    color: #918a82;
+
+    font-size: 11px;
+
+    margin: 7px 0 20px;
+}
+
+
+/* =====================================================
+   RODAPÉ DO CARRINHO
+===================================================== */
+
+.cart-footer {
+    padding: 20px 25px;
+
+    border-top:
+        1px solid rgba(201, 164, 92, 0.2);
+
+    background: #080808;
+}
+
+.cart-total {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+.cart-total span {
+    color: #99928a;
+
+    font-size: 12px;
+}
+
+.cart-total strong {
+    color: var(--gold-light);
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 30px;
+}
+
+.clear-cart {
+    border: 0;
+
+    background: transparent;
+
+    color: #a87575;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 13px;
+}
+
+.clear-cart:hover {
+    color: #d28a8a;
+
+    text-decoration: underline;
+}
+
+.whatsapp-cart {
+    width: 100%;
+}
+
+.whatsapp-cart:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer {
+    background: #050505;
+
+    color: var(--white);
+
+    border-top:
+        1px solid rgba(201, 164, 92, 0.18);
+}
+
+.footer-content {
+    min-height: 150px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.footer-logo {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.footer-logo span {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 28px;
+
+    letter-spacing: 3px;
+
+    color: var(--gold-light);
+}
+
+.footer-logo small {
+    color: #9b9389;
+
+    font-size: 8px;
+
+    letter-spacing: 3px;
+}
+
+.footer-social {
+    display: flex;
+
+    gap: 12px;
+}
+
+.footer-social a {
+    width: 42px;
+    height: 42px;
+
+    border:
+        1px solid rgba(201, 164, 92, 0.3);
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: var(--gold-light);
+
+    transition: 0.3s ease;
+}
+
+.footer-social a:hover {
+    background: var(--gold);
+
+    color: #080808;
+}
+
+.footer-bottom {
+    padding: 18px 20px;
+
+    text-align: center;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.07);
+}
+
+.footer-bottom p {
+    color: #68625c;
+
+    font-size: 9px;
+}
+
+
+/* =====================================================
+   WHATSAPP FLUTUANTE
+===================================================== */
+
+.floating-whatsapp {
+    position: fixed;
+
+    right: 22px;
+    bottom: 22px;
+
+    width: 58px;
+    height: 58px;
+
+    border-radius: 50%;
+
+    background: #25d366;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 27px;
+
+    z-index: 1500;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.45);
+
+    transition: 0.3s ease;
+}
+
+.floating-whatsapp:hover {
+    transform: scale(1.08);
+}
+
+
+/* =====================================================
+   RESPONSIVIDADE
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .nav {
+        gap: 14px;
+    }
+
+    .nav > a {
+        font-size: 10px;
+    }
+
+    .service-categories {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .about-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* =====================================================
+   TABLET / MENU MOBILE
+===================================================== */
+
+@media (max-width: 850px) {
+
+    .menu-button {
+        display: block;
+    }
+
+    .nav {
+        position: absolute;
+
+        top: 82px;
+        left: 0;
+
+        width: 100%;
+
+        background: #070707;
+
+        padding: 25px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 18px;
+
+        border-top:
+            1px solid rgba(201, 164, 92, 0.15);
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        transform: translateY(-10px);
+
+        transition: 0.3s ease;
+    }
+
+    .nav.active {
+        opacity: 1;
+
+        visibility: visible;
+
+        transform: translateY(0);
+    }
+
+    .nav > a {
+        font-size: 12px;
+
+        padding: 5px 0;
+    }
+
+    .nav > a::after {
+        display: none;
+    }
+
+    .nav-button {
+        justify-content: center;
+    }
+
+    /*
+       No tablet ainda tentamos manter
+       NAIARA BRAGA na mesma linha.
+    */
+
+    .hero h1 {
+        font-size: clamp(48px, 9vw, 82px);
+    }
+
+    .naiara-content {
+        grid-template-columns: 1fr;
+
+        gap: 45px;
+    }
+
+    .naiara-photo {
+        margin: 0 auto;
+
+        width: min(100%, 450px);
+    }
+
+    .catalog-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* =====================================================
+   CELULAR
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .section {
+        padding: 75px 0;
+    }
+
+    .container {
+        width: min(92%, 500px);
+    }
+
+    .nav-container {
+        min-height: 72px;
+    }
+
+    .nav {
+        top: 72px;
+    }
+
+    .logo span {
+        font-size: 22px;
+    }
+
+    .logo small {
+        font-size: 7px;
+    }
+
+    .hero {
+        min-height: 90vh;
+    }
+
+    .hero-content {
+        padding-top: 80px;
+    }
+
+    /*
+       Aqui reduzimos o tamanho para tentar
+       manter o nome inteiro na mesma linha.
+    */
+
+    .hero h1 {
+        font-size: clamp(34px, 11.5vw, 58px);
+
+        letter-spacing: 1px;
+
+        white-space: nowrap;
+    }
+
+    .hero-text {
+        font-size: 13px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        max-width: 280px;
+    }
+
+    .service-categories {
+        grid-template-columns: 1fr;
+    }
+
+    .category-card {
+        min-height: 220px;
+    }
+
+    .catalog-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .simple-services {
+        grid-template-columns: 1fr;
+    }
+
+    .simple-card {
+        grid-template-columns: 1fr auto;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-options {
+        flex-direction: column;
+
+        align-items: center;
+
+        gap: 18px;
+    }
+
+    .naiara-title {
+        text-align: center;
+    }
+
+    .naiara-title .gold-line {
+        margin-left: auto;
+
+        margin-right: auto;
+    }
+
+    .naiara-photo::before {
+        transform: translate(8px, 8px);
+    }
+
+    .cart-drawer {
+        width: 100%;
+    }
+
+    .cart-body {
+        padding: 20px;
+    }
+
+    .cart-footer {
+        padding: 18px 20px;
+    }
+
+    .floating-whatsapp {
+        right: 16px;
+
+        bottom: 16px;
+
+        width: 53px;
+        height: 53px;
+
+        font-size: 24px;
+    }
+}
+
+
+/* =====================================================
+   CELULARES MUITO PEQUENOS
+===================================================== */
+
+@media (max-width: 380px) {
+
+    .hero h1 {
+        font-size: 32px;
+
+        letter-spacing: 0;
+    }
+
+    .hero-subtitle {
+        font-size: 9px;
+
+        letter-spacing: 3px;
+    }
+
+    .logo span {
+        font-size: 19px;
+    }
+
+    .cart-button {
+        padding: 8px 10px;
+    }
+
+    .cart-button span {
+        display: none;
+    }
+}
+/* =====================================================
+   GALERIA DE FOTOS DOS SERVIÇOS
+===================================================== */
+
+.service-gallery {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin: 35px 0 45px;
+}
+
+.gallery-item {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #111;
+    border: 1px solid rgba(201, 164, 92, 0.25);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+/* Efeito elegante ao passar o mouse */
+
+.gallery-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.45),
+        transparent 55%
+    );
+    pointer-events: none;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+    filter: brightness(1.08);
+}
+
+
+/* =====================================================
+   ENDEREÇO DO STUDIO NO FOOTER
+===================================================== */
+
+.footer-address {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+    font-family: "Montserrat", sans-serif;
+}
+
+
+/* =====================================================
+   CRÉDITO DO DESENVOLVEDOR
+===================================================== */
+
+.developer-credit {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.3px;
+}
+
+.developer-credit strong {
+    color: var(--gold);
+    font-weight: 500;
+}
+
+
+/* =====================================================
+   RESPONSIVIDADE DA GALERIA
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .service-gallery {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 25px 0 35px;
+    }
+
+    .gallery-item {
+        height: 180px;
+        border-radius: 6px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .service-gallery {
+        gap: 8px;
+        margin: 20px 0 30px;
+    }
+
+    .gallery-item {
+        height: 125px;
+    }
+
+}
+/* =====================================================
+   FOTO - SPA DOS PÉS
+===================================================== */
+
+.spa-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.spa-image {
+    width: 70%;
+    height: 380px;
+    position: relative;
+    padding: 5px;
+    margin-left: auto;
+
+    background: linear-gradient(
+        135deg,
+        rgba(201, 164, 92, 0.55),
+        rgba(201, 164, 92, 0.08) 45%,
+        rgba(0, 0, 0, 0.35) 100%
+    );
+
+    border-radius: 6px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.45),
+        0 0 25px rgba(201, 164, 92, 0.08);
+}
+
+/* =====================================================
+   DETALHE DECORATIVO DOURADO - CANTO SUPERIOR
+===================================================== */
+
+.spa-image::before {
+    content: "";
+
+    position: absolute;
+
+    width: 70px;
+    height: 70px;
+
+    border-top: 1px solid var(--gold);
+    border-left: 1px solid var(--gold);
+
+    top: -10px;
+    left: -10px;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+/* =====================================================
+   DETALHE DECORATIVO DOURADO - CANTO INFERIOR
+===================================================== */
+
+.spa-image::after {
+    content: "";
+
+    position: absolute;
+
+    width: 70px;
+    height: 70px;
+
+    border-right: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+
+    bottom: -10px;
+    right: -10px;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+/* =====================================================
+   IMAGEM
+===================================================== */
+
+.spa-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 2px;
+
+    transition: transform 0.5s ease;
+}
+
+/* =====================================================
+   EFEITO AO PASSAR O MOUSE
+===================================================== */
+
+.spa-image:hover img {
+    transform: scale(1.03);
+}
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .spa-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .spa-image {
+        height: 350px;
+    }
+
+}
+/* LINK DO DESENVOLVEDOR */
+
+footer p a {
+    color: #c9a45c;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer p a:hover {
+    color: #f0d9a0;
+}

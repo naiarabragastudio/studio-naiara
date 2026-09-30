@@ -1,0 +1,1074 @@
+/* =====================================================
+   PAINEL ADMINISTRATIVO
+   STUDIO DE BELEZA NAIARA BRAGA
+===================================================== */
+
+
+/* =====================================================
+   VARIÁVEIS
+===================================================== */
+
+:root {
+
+    --fundo: #202124;
+    --fundo-escuro: #18191b;
+
+    --card: #292a2d;
+    --card-hover: #2e2f32;
+
+    --campo: #202124;
+
+    --borda: #3a3b3e;
+
+    --dourado: #c8b083;
+    --dourado-claro: #d8c59e;
+
+    --texto: #f3f1ec;
+    --texto-suave: #aaa8a3;
+
+    --verde: #79b892;
+    --vermelho: #c97878;
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(200, 176, 131, 0.06),
+            transparent 35%
+        ),
+        var(--fundo);
+
+    color: var(--texto);
+
+    font-family: "Montserrat", sans-serif;
+
+}
+
+
+/* =====================================================
+   PAINEL
+===================================================== */
+
+.painel {
+
+    width: 100%;
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding: 40px 50px 70px;
+
+}
+
+
+/* =====================================================
+   CABEÇALHO
+===================================================== */
+
+.topo {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding-bottom: 35px;
+
+    border-bottom: 1px solid var(--borda);
+
+}
+
+
+.subtitulo {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--dourado);
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    letter-spacing: 3px;
+
+}
+
+
+.topo h1 {
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 48px;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+}
+
+
+.topo p {
+
+    margin-top: 8px;
+
+    color: var(--texto-suave);
+
+    font-size: 13px;
+
+    letter-spacing: 0.5px;
+
+}
+
+
+/* =====================================================
+   BOTÃO SAIR
+===================================================== */
+
+.btn-sair {
+
+    padding: 11px 22px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 3px;
+
+    background: transparent;
+
+    color: var(--texto-suave);
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+
+.btn-sair:hover {
+
+    border-color: var(--dourado);
+
+    color: var(--dourado);
+
+}
+
+
+/* =====================================================
+   TÍTULO DA SEÇÃO
+===================================================== */
+
+.titulo-secao {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin: 45px 0 30px;
+
+}
+
+
+.titulo-secao > div > span {
+
+    color: var(--dourado);
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: 3px;
+
+}
+
+
+.titulo-secao h2 {
+
+    margin-top: 5px;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 38px;
+
+    font-weight: 600;
+
+}
+
+
+.titulo-secao p {
+
+    margin-top: 5px;
+
+    color: var(--texto-suave);
+
+    font-size: 13px;
+
+}
+
+
+/* =====================================================
+   BOTÃO ATUALIZAR
+===================================================== */
+
+.btn-recarregar {
+
+    padding: 12px 20px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 3px;
+
+    background: var(--card);
+
+    color: var(--texto);
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+
+.btn-recarregar:hover {
+
+    border-color: var(--dourado);
+
+    color: var(--dourado);
+
+}
+
+
+/* =====================================================
+   MENSAGEM
+===================================================== */
+
+.mensagem {
+
+    min-height: 0;
+
+    margin-bottom: 20px;
+
+    font-size: 13px;
+
+}
+
+
+.mensagem.sucesso {
+
+    color: var(--verde);
+
+}
+
+
+.mensagem.erro {
+
+    color: var(--vermelho);
+
+}
+
+
+/* =====================================================
+   LISTA
+===================================================== */
+
+.lista-procedimentos {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.procedimento-card {
+
+    padding: 25px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 5px;
+
+    background: var(--card);
+
+    transition:
+        border-color 0.3s,
+        background 0.3s,
+        transform 0.3s;
+
+}
+
+
+.procedimento-card:hover {
+
+    border-color: #55565a;
+
+    background: var(--card-hover);
+
+}
+
+
+.card-topo {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+}
+
+
+.categoria {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--dourado);
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
+
+}
+
+
+.card-info h3 {
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 25px;
+
+    font-weight: 600;
+
+    line-height: 1.1;
+
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.status {
+
+    flex-shrink: 0;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+}
+
+
+.status.ativo {
+
+    background: rgba(121, 184, 146, 0.10);
+
+    color: var(--verde);
+
+}
+
+
+.status.inativo {
+
+    background: rgba(201, 120, 120, 0.10);
+
+    color: var(--vermelho);
+
+}
+
+
+/* =====================================================
+   INFORMAÇÕES
+===================================================== */
+
+.informacoes {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--borda);
+
+}
+
+
+.informacao span {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--texto-suave);
+
+    font-size: 9px;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.informacao strong {
+
+    color: var(--texto);
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+}
+
+
+/* =====================================================
+   ÁREA EDITAR
+===================================================== */
+
+.editar-area {
+
+    margin-top: 22px;
+
+}
+
+
+.btn-editar {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 3px;
+
+    background: transparent;
+
+    color: var(--dourado-claro);
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+
+.btn-editar:hover {
+
+    background: rgba(200, 176, 131, 0.06);
+
+    border-color: var(--dourado);
+
+}
+
+
+/* =====================================================
+   EDIÇÃO
+===================================================== */
+
+.procedimento-card.editando {
+
+    border-color: var(--dourado);
+
+}
+
+
+.editar-titulo span {
+
+    color: var(--dourado);
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
+
+}
+
+
+.editar-titulo h3 {
+
+    margin-top: 5px;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 25px;
+
+}
+
+
+/* =====================================================
+   FORMULÁRIO
+===================================================== */
+
+.form-edicao {
+
+    margin-top: 25px;
+
+}
+
+
+.campo {
+
+    margin-bottom: 18px;
+
+}
+
+
+.campo label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--texto-suave);
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.5px;
+
+}
+
+
+.campo input,
+.campo select {
+
+    width: 100%;
+
+    height: 44px;
+
+    padding: 0 13px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 3px;
+
+    outline: none;
+
+    background: var(--campo);
+
+    color: var(--texto);
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 13px;
+
+    transition: 0.3s;
+
+}
+
+
+.campo input:focus,
+.campo select:focus {
+
+    border-color: var(--dourado);
+
+}
+
+
+/* =====================================================
+   LINHA DE CAMPOS
+===================================================== */
+
+.linha-campos {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+
+}
+
+
+/* =====================================================
+   PREFIXOS
+===================================================== */
+
+.input-prefixo {
+
+    display: flex;
+
+    align-items: center;
+
+    height: 44px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 3px;
+
+    background: var(--campo);
+
+    transition: 0.3s;
+
+}
+
+
+.input-prefixo:focus-within {
+
+    border-color: var(--dourado);
+
+}
+
+
+.input-prefixo span {
+
+    padding: 0 12px;
+
+    color: var(--dourado);
+
+    font-size: 12px;
+
+}
+
+
+.input-prefixo input {
+
+    height: 42px;
+
+    border: none;
+
+    background: transparent;
+
+}
+
+
+.input-prefixo input:focus {
+
+    border: none;
+
+}
+
+
+/* =====================================================
+   BOTÕES DE EDIÇÃO
+===================================================== */
+
+.botoes-edicao {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1.5fr;
+
+    gap: 10px;
+
+    margin-top: 25px;
+
+}
+
+
+.btn-cancelar,
+.btn-salvar {
+
+    height: 44px;
+
+    border-radius: 3px;
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+
+.btn-cancelar {
+
+    border: 1px solid var(--borda);
+
+    background: transparent;
+
+    color: var(--texto-suave);
+
+}
+
+
+.btn-cancelar:hover {
+
+    border-color: #666;
+
+    color: var(--texto);
+
+}
+
+
+.btn-salvar {
+
+    border: 1px solid var(--dourado);
+
+    background: var(--dourado);
+
+    color: #1b1b1b;
+
+}
+
+
+.btn-salvar:hover {
+
+    background: var(--dourado-claro);
+
+}
+
+
+.btn-salvar:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+}
+
+
+/* =====================================================
+   CARREGANDO / ERRO / VAZIO
+===================================================== */
+
+.carregando,
+.erro,
+.vazio {
+
+    grid-column: 1 / -1;
+
+    padding: 50px;
+
+    border: 1px solid var(--borda);
+
+    background: var(--card);
+
+    color: var(--texto-suave);
+
+    text-align: center;
+
+    font-size: 13px;
+
+}
+
+
+.erro {
+
+    color: var(--vermelho);
+
+}
+
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .painel {
+
+        padding: 30px 25px 50px;
+
+    }
+
+
+    .lista-procedimentos {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .painel {
+
+        padding: 25px 18px 40px;
+
+    }
+
+
+    .topo {
+
+        align-items: flex-start;
+
+        gap: 20px;
+
+    }
+
+
+    .topo h1 {
+
+        font-size: 38px;
+
+    }
+
+
+    .titulo-secao {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 20px;
+
+    }
+
+
+    .titulo-secao h2 {
+
+        font-size: 32px;
+
+    }
+
+
+    .btn-recarregar {
+
+        width: 100%;
+
+    }
+
+
+    .linha-campos {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .botoes-edicao {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .card-topo {
+
+        flex-direction: column;
+
+    }
+
+
+    .status {
+
+        align-self: flex-start;
+
+    }
+
+}
+/* =====================================================
+   FOTOS DOS PROCEDIMENTOS
+===================================================== */
+
+.foto-procedimento {
+    width: 100%;
+    height: 220px;
+    margin: 20px 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--fundo);
+    border: 1px solid var(--borda);
+}
+
+.foto-procedimento img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.sem-foto {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--texto-suave);
+}
+
+.sem-foto span {
+    font-size: 34px;
+}
+
+.sem-foto p {
+    margin: 0;
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   FOTO DURANTE A EDIÇÃO
+===================================================== */
+
+.foto-edicao {
+    margin-bottom: 24px;
+}
+
+.foto-edicao > label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+}
+
+.preview-foto {
+    width: 100%;
+    max-width: 360px;
+    height: 240px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    border-radius: 14px;
+    background: var(--fundo);
+    border: 1px solid var(--borda);
+}
+
+.preview-foto img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+
+/* =====================================================
+   CAMPO DE UPLOAD
+===================================================== */
+
+.input-foto {
+    width: 100%;
+    max-width: 360px;
+    padding: 10px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: var(--campo);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.input-foto:hover {
+    border-color: var(--dourado);
+}
+
+.input-foto::file-selector-button {
+    margin-right: 12px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: var(--dourado);
+    color: #18191b;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.input-foto::file-selector-button:hover {
+    background: var(--dourado-claro);
+}
+
+.ajuda-foto {
+    display: block;
+    max-width: 360px;
+    margin-top: 8px;
+    color: var(--texto-suave);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .foto-procedimento {
+        height: 200px;
+    }
+
+    .preview-foto {
+        max-width: 100%;
+        height: 220px;
+    }
+
+    .input-foto {
+        max-width: 100%;
+    }
+
+}

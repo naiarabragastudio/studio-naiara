@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Painel Administrativo | Naiara Braga</title>
+
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- CSS do painel -->
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+    <div class="painel">
+
+        <!-- CABEÇALHO -->
+        <header class="topo">
+
+            <div>
+                <span class="subtitulo">STUDIO DE BELEZA</span>
+
+                <h1>
+                    Naiara Braga
+                </h1>
+
+                <p>
+                    Painel administrativo
+                </p>
+            </div>
+
+            <button id="logout" class="btn-sair">
+                Sair
+            </button>
+
+        </header>
+
+
+        <!-- CONTEÚDO -->
+        <main>
+
+            <div class="titulo-secao">
+
+                <div>
+                    <span>GERENCIAMENTO</span>
+
+                    <h2>
+                        Procedimentos
+                    </h2>
+
+                    <p>
+                        Edite preços, nomes, duração, fotos e disponibilidade dos serviços.
+                    </p>
+                </div>
+
+                <button id="recarregar" class="btn-recarregar">
+                    ↻ Atualizar
+                </button>
+
+            </div>
+
+
+            <!-- MENSAGEM -->
+            <div id="mensagem" class="mensagem"></div>
+
+
+            <!-- LISTA DE PROCEDIMENTOS -->
+            <section id="lista-procedimentos" class="lista-procedimentos">
+
+                <div class="carregando">
+                    Carregando procedimentos...
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <script>
+
+        /* =====================================================
+           CONFIGURAÇÃO SUPABASE
+        ===================================================== */
+
+        const SUPABASE_URL =
+            "https://hyjuuzqdxdarumsqopvn.supabase.co";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_aaTHViraL-2HzMThmc8ekQ_BYXrjSYH";
+
+        const supabaseClient = supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+        /* =====================================================
+           CONFIGURAÇÃO DO STORAGE
+        ===================================================== */
+
+        const STORAGE_BUCKET = "procedimento";
+
+
+        /* =====================================================
+           PROCEDIMENTOS QUE PODEM TER FOTO
+        ===================================================== */
+
+        const PROCEDIMENTOS_COM_FOTO = [
+
+            "volume light",
+            "volume brasileiro",
+            "volume egipcio",
+
+            "alongamento quadrada",
+            "alongamento almond",
+            "alongamento stiletto"
+
+        ];
+
+
+        /* =====================================================
+           NORMALIZAR TEXTO
+        ===================================================== */
+
+        function normalizarTexto(texto) {
+
+            return String(texto || "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .trim();
+
+        }
+
+
+        /* =====================================================
+           VERIFICAR SE O PROCEDIMENTO PODE TER FOTO
+        ===================================================== */
+
+        function podeTerFoto(nome) {
+
+            const nomeNormalizado =
+                normalizarTexto(nome);
+
+            return PROCEDIMENTOS_COM_FOTO.includes(
+                nomeNormalizado
+            );
+
+        }
+
+
+        /* =====================================================
+           ELEMENTOS
+        ===================================================== */
+
+        const lista =
+            document.getElementById("lista-procedimentos");
+
+        const mensagem =
+            document.getElementById("mensagem");
+
+        const logout =
+            document.getElementById("logout");
+
+        const recarregar =
+            document.getElementById("recarregar");
+
+
+        /* =====================================================
+           VERIFICAR LOGIN
+        ===================================================== */
+
+        async function verificarLogin() {
+
+            const {
+                data: { session }
+            } = await supabaseClient.auth.getSession();
+
+            if (!session) {
+
+                window.location.href = "admin.html";
+
+                return false;
+            }
+
+            return true;
+
+        }
+
+
+        /* =====================================================
+           MENSAGEM
+        ===================================================== */
+
+        function mostrarMensagem(texto, tipo = "sucesso") {
+
+            mensagem.textContent = texto;
+
+            mensagem.className =
+                "mensagem " + tipo;
+
+            setTimeout(() => {
+
+                mensagem.textContent = "";
+                mensagem.className = "mensagem";
+
+            }, 4000);
+
+        }
+
+
+        /* =====================================================
+           FORMATAR PREÇO
+        ===================================================== */
+
+        function formatarPreco(valor) {
+
+            return Number(valor).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+
+        }
+
+
+        /* =====================================================
+           CRIAR URL PÚBLICA DA FOTO
+        ===================================================== */
+
+        function criarUrlFoto(caminho) {
+
+            if (!caminho) {
+                return "";
+            }
+
+            const {
+                data
+            } = supabaseClient
+                .storage
+                .from(STORAGE_BUCKET)
+                .getPublicUrl(caminho);
+
+            return data.publicUrl;
+
+        }
+
+
+        /* =====================================================
+           PEGAR CAMINHO DA FOTO ANTIGA
+        ===================================================== */
+
+        function pegarCaminhoFoto(valor) {
+
+            if (!valor) {
+                return null;
+            }
+
+            /*
+             * Se já estiver salvo apenas o caminho,
+             * usamos diretamente.
+             */
+
+            if (!valor.startsWith("http")) {
+                return valor;
+            }
+
+
+            /*
+             * Caso tenha sido salvo como URL completa,
+             * tentamos retirar a parte inicial.
+             */
+
+            const marcador =
+                `/storage/v1/object/public/${STORAGE_BUCKET}/`;
+
+            const posicao =
+                valor.indexOf(marcador);
+
+
+            if (posicao !== -1) {
+
+                return valor.substring(
+                    posicao + marcador.length
+                );
+
+            }
+
+
+            return null;
+
+        }
+
+
+        /* =====================================================
+           CARREGAR PROCEDIMENTOS
+        ===================================================== */
+
+        async function carregarProcedimentos() {
+
+            lista.innerHTML = `
+                <div class="carregando">
+                    Carregando procedimentos...
+                </div>
+            `;
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from("procedimento")
+                .select("*")
+                .order("nome", {
+                    ascending: true
+                });
+
+
+            if (error) {
+
+                console.error(error);
+
+                lista.innerHTML = `
+                    <div class="erro">
+                        Não foi possível carregar os procedimentos.
+                    </div>
+                `;
+
+                mostrarMensagem(
+                    "Erro ao carregar procedimentos.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            if (!data || data.length === 0) {
+
+                lista.innerHTML = `
+                    <div class="vazio">
+                        Nenhum procedimento encontrado.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            lista.innerHTML = "";
+
+
+            data.forEach(procedimento => {
+
+                criarCard(procedimento);
+
+            });
+
+        }
+
+
+        /* =====================================================
+           CRIAR CARD
+        ===================================================== */
+
+        function criarCard(procedimento) {
+
+            const card =
+                document.createElement("article");
+
+            card.className = "procedimento-card";
+
+
+            const nomeProcedimento =
+                procedimento.nome ||
+                procedimento.name ||
+                "Sem nome";
+
+
+            const temFoto =
+                podeTerFoto(nomeProcedimento);
+
+
+            const urlFoto =
+                temFoto
+                    ? criarUrlFoto(procedimento.foto)
+                    : "";
+
+
+            /*
+             * Área da foto somente para os 6 procedimentos
+             */
+
+            const areaFoto =
+                temFoto
+                    ?
+                    `
+                        <!-- FOTO DO PROCEDIMENTO -->
+
+                        <div class="foto-procedimento">
+
+                            ${
+                                urlFoto
+                                ?
+                                `
+                                    <img
+                                        src="${urlFoto}"
+                                        alt="${nomeProcedimento}"
+                                    >
+                                `
+                                :
+                                `
+                                    <div class="sem-foto">
+                                        <span>📷</span>
+                                        <p>
+                                            Nenhuma foto cadastrada
+                                        </p>
+                                    </div>
+                                `
+                            }
+
+                        </div>
+                    `
+                    :
+                    "";
+
+
+            card.innerHTML = `
+
+                <div class="card-topo">
+
+                    <div class="card-info">
+
+                        <span class="categoria">
+                            PROCEDIMENTO
+                        </span>
+
+                        <h3>
+                            ${nomeProcedimento}
+                        </h3>
+
+                    </div>
+
+                    <span class="status ${procedimento.ativo ? "ativo" : "inativo"}">
+
+                        ${procedimento.ativo ? "Ativo" : "Inativo"}
+
+                    </span>
+
+                </div>
+
+
+                ${areaFoto}
+
+
+                <div class="informacoes">
+
+                    <div class="informacao">
+
+                        <span>PREÇO</span>
+
+                        <strong>
+                            ${formatarPreco(procedimento.preco)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="informacao">
+
+                        <span>DURAÇÃO</span>
+
+                        <strong>
+                            ${procedimento.duracao || 0} min
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="editar-area">
+
+                    <button class="btn-editar">
+                        Editar procedimento
+                    </button>
+
+                </div>
+
+            `;
+
+
+            const botaoEditar =
+                card.querySelector(".btn-editar");
+
+
+            botaoEditar.addEventListener(
+                "click",
+                () => abrirEdicao(card, procedimento)
+            );
+
+
+            lista.appendChild(card);
+
+        }
+
+
+        /* =====================================================
+           ABRIR EDIÇÃO
+        ===================================================== */
+
+        function abrirEdicao(card, procedimento) {
+
+            card.classList.add("editando");
+
+
+            const nomeProcedimento =
+                procedimento.nome ||
+                procedimento.name ||
+                "";
+
+
+            const temFoto =
+                podeTerFoto(nomeProcedimento);
+
+
+            const urlFoto =
+                temFoto
+                    ? criarUrlFoto(procedimento.foto)
+                    : "";
+
+
+            /*
+             * Área de edição da foto.
+             *
+             * Somente os 6 procedimentos
+             * possuem essa área.
+             */
+
+            const areaFotoEdicao =
+                temFoto
+                    ?
+                    `
+                        <!-- FOTO -->
+
+                        <div class="foto-edicao">
+
+                            <label>
+                                Foto do procedimento
+                            </label>
+
+
+                            <div class="preview-foto">
+
+                                ${
+                                    urlFoto
+                                    ?
+                                    `
+                                        <img
+                                            src="${urlFoto}"
+                                            alt="${nomeProcedimento}"
+                                        >
+                                    `
+                                    :
+                                    `
+                                        <div class="sem-foto">
+                                            <span>📷</span>
+                                            <p>
+                                                Nenhuma foto cadastrada
+                                            </p>
+                                        </div>
+                                    `
+                                }
+
+                            </div>
+
+
+                            <input
+                                type="file"
+                                class="input-foto"
+                                accept="image/jpeg,image/png,image/webp"
+                            >
+
+                            <small class="ajuda-foto">
+                                JPG, PNG ou WEBP. Recomendado usar uma foto vertical.
+                            </small>
+
+                        </div>
+                    `
+                    :
+                    "";
+
+
+            card.innerHTML = `
+
+                <div class="editar-titulo">
+
+                    <span>EDITANDO PROCEDIMENTO</span>
+
+                    <h3>
+                        ${nomeProcedimento}
+                    </h3>
+
+                </div>
+
+
+                ${areaFotoEdicao}
+
+
+                <div class="form-edicao">
+
+                    <div class="campo">
+
+                        <label>
+                            Nome do procedimento
+                        </label>
+
+                        <input
+                            type="text"
+                            class="input-nome"
+                            value="${nomeProcedimento}"
+                        >
+
+                    </div>
+
+
+                    <div class="linha-campos">
+
+                        <div class="campo">
+
+                            <label>
+                                Preço
+                            </label>
+
+                            <div class="input-prefixo">
+
+                                <span>R$</span>
+
+                                <input
+                                    type="number"
+                                    class="input-preco"
+                                    value="${procedimento.preco || 0}"
+                                    min="0"
+                                    step="0.01"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="campo">
+
+                            <label>
+                                Duração
+                            </label>
+
+                            <div class="input-prefixo">
+
+                                <input
+                                    type="number"
+                                    class="input-duracao"
+                                    value="${procedimento.duracao || 0}"
+                                    min="0"
+                                >
+
+                                <span>min</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select class="input-ativo">
+
+                            <option
+                                value="true"
+                                ${procedimento.ativo ? "selected" : ""}
+                            >
+                                Ativo
+                            </option>
+
+                            <option
+                                value="false"
+                                ${!procedimento.ativo ? "selected" : ""}
+                            >
+                                Inativo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="botoes-edicao">
+
+                        <button class="btn-cancelar">
+                            Cancelar
+                        </button>
+
+                        <button class="btn-salvar">
+                            Salvar alterações
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            /*
+             * INPUT DA FOTO
+             *
+             * Só procuramos o input se
+             * esse procedimento puder ter foto.
+             */
+
+            const inputFoto =
+                temFoto
+                    ? card.querySelector(".input-foto")
+                    : null;
+
+
+            const preview =
+                temFoto
+                    ? card.querySelector(".preview-foto")
+                    : null;
+
+
+            /*
+             * Mostra prévia da foto
+             * antes de salvar.
+             */
+
+            if (inputFoto && preview) {
+
+                inputFoto.addEventListener(
+                    "change",
+                    () => {
+
+                        const arquivo =
+                            inputFoto.files[0];
+
+                        if (!arquivo) {
+                            return;
+                        }
+
+
+                        if (!arquivo.type.startsWith("image/")) {
+
+                            mostrarMensagem(
+                                "Escolha um arquivo de imagem.",
+                                "erro"
+                            );
+
+                            inputFoto.value = "";
+
+                            return;
+                        }
+
+
+                        const tamanhoMaximo =
+                            5 * 1024 * 1024;
+
+
+                        if (arquivo.size > tamanhoMaximo) {
+
+                            mostrarMensagem(
+                                "A imagem deve ter no máximo 5 MB.",
+                                "erro"
+                            );
+
+                            inputFoto.value = "";
+
+                            return;
+                        }
+
+
+                        const urlTemporaria =
+                            URL.createObjectURL(arquivo);
+
+
+                        preview.innerHTML = `
+
+                            <img
+                                src="${urlTemporaria}"
+                                alt="Pré-visualização"
+                            >
+
+                        `;
+
+                    }
+                );
+
+            }
+
+
+            const btnCancelar =
+                card.querySelector(".btn-cancelar");
+
+            const btnSalvar =
+                card.querySelector(".btn-salvar");
+
+
+            btnCancelar.addEventListener(
+                "click",
+                carregarProcedimentos
+            );
+
+
+            btnSalvar.addEventListener(
+                "click",
+                () => salvarProcedimento(
+                    card,
+                    procedimento
+                )
+            );
+
+        }
+
+
+        /* =====================================================
+           SALVAR PROCEDIMENTO
+        ===================================================== */
+
+        async function salvarProcedimento(
+            card,
+            procedimento
+        ) {
+
+            const nome =
+                card.querySelector(".input-nome").value.trim();
+
+            const preco =
+                Number(
+                    card.querySelector(".input-preco").value
+                );
+
+            const duracao =
+                Number(
+                    card.querySelector(".input-duracao").value
+                );
+
+            const ativo =
+                card.querySelector(".input-ativo").value === "true";
+
+
+            /*
+             * Verificamos pelo nome atual do procedimento.
+             */
+
+            const temFoto =
+                podeTerFoto(
+                    procedimento.nome ||
+                    procedimento.name ||
+                    ""
+                );
+
+
+            /*
+             * O input de foto só existe
+             * nos 6 procedimentos permitidos.
+             */
+
+            const inputFoto =
+                temFoto
+                    ? card.querySelector(".input-foto")
+                    : null;
+
+
+            const arquivoFoto =
+                inputFoto
+                    ? inputFoto.files[0] || null
+                    : null;
+
+
+            /* =================================================
+               VALIDAÇÕES
+            ================================================= */
+
+            if (!nome) {
+
+                mostrarMensagem(
+                    "Digite o nome do procedimento.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            if (preco < 0 || isNaN(preco)) {
+
+                mostrarMensagem(
+                    "Digite um preço válido.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            if (duracao < 0 || isNaN(duracao)) {
+
+                mostrarMensagem(
+                    "Digite uma duração válida.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            /*
+             * Validação da foto somente
+             * para os 6 procedimentos.
+             */
+
+            if (arquivoFoto) {
+
+                if (!arquivoFoto.type.startsWith("image/")) {
+
+                    mostrarMensagem(
+                        "Escolha uma imagem válida.",
+                        "erro"
+                    );
+
+                    return;
+                }
+
+
+                const tamanhoMaximo =
+                    5 * 1024 * 1024;
+
+
+                if (arquivoFoto.size > tamanhoMaximo) {
+
+                    mostrarMensagem(
+                        "A imagem deve ter no máximo 5 MB.",
+                        "erro"
+                    );
+
+                    return;
+                }
+
+            }
+
+
+            const btnSalvar =
+                card.querySelector(".btn-salvar");
+
+
+            btnSalvar.disabled = true;
+
+            btnSalvar.textContent =
+                "Salvando...";
+
+
+            /*
+             * Mantém a foto atual.
+             *
+             * Para procedimentos sem foto,
+             * ela não será alterada.
+             */
+
+            let novoCaminhoFoto =
+                procedimento.foto || null;
+
+
+            let caminhoFotoAntiga =
+                temFoto
+                    ? pegarCaminhoFoto(procedimento.foto)
+                    : null;
+
+
+            /* =================================================
+               ENVIAR NOVA FOTO
+            ================================================= */
+
+            if (arquivoFoto && temFoto) {
+
+                const extensao =
+                    arquivoFoto.name
+                        .split(".")
+                        .pop()
+                        .toLowerCase();
+
+
+                const nomeArquivo =
+                    `${procedimento.id}-${Date.now()}.${extensao}`;
+
+
+                novoCaminhoFoto =
+                    nomeArquivo;
+
+
+                const {
+                    error: uploadError
+                } = await supabaseClient
+                    .storage
+                    .from(STORAGE_BUCKET)
+                    .upload(
+                        nomeArquivo,
+                        arquivoFoto,
+                        {
+                            cacheControl: "3600",
+                            upsert: false
+                        }
+                    );
+
+
+                if (uploadError) {
+
+                    console.error(uploadError);
+
+                    btnSalvar.disabled = false;
+
+                    btnSalvar.textContent =
+                        "Salvar alterações";
+
+                    mostrarMensagem(
+                        "Não foi possível enviar a foto.",
+                        "erro"
+                    );
+
+                    return;
+                }
+
+            }
+
+
+            /* =================================================
+               ATUALIZAR BANCO
+            ================================================= */
+
+            const dadosAtualizacao = {
+
+                nome: nome,
+
+                name: nome,
+
+                preco: preco,
+
+                duracao: duracao,
+
+                ativo: ativo
+
+            };
+
+
+            /*
+             * A coluna foto só é atualizada
+             * para os 6 procedimentos permitidos.
+             */
+
+            if (temFoto) {
+
+                dadosAtualizacao.foto =
+                    novoCaminhoFoto;
+
+            }
+
+
+            const {
+                error
+            } = await supabaseClient
+                .from("procedimento")
+                .update(dadosAtualizacao)
+                .eq("id", procedimento.id);
+
+
+            if (error) {
+
+                console.error(error);
+
+
+                /*
+                 * Se a nova foto foi enviada mas o banco
+                 * falhou, tentamos apagar a nova foto
+                 * para não deixar arquivo sobrando.
+                 */
+
+                if (
+                    arquivoFoto &&
+                    temFoto &&
+                    novoCaminhoFoto
+                ) {
+
+                    await supabaseClient
+                        .storage
+                        .from(STORAGE_BUCKET)
+                        .remove([
+                            novoCaminhoFoto
+                        ]);
+
+                }
+
+
+                btnSalvar.disabled = false;
+
+                btnSalvar.textContent =
+                    "Salvar alterações";
+
+                mostrarMensagem(
+                    "Não foi possível salvar as alterações.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            /* =================================================
+               APAGAR FOTO ANTIGA
+            ================================================= */
+
+            if (
+                arquivoFoto &&
+                temFoto &&
+                caminhoFotoAntiga &&
+                caminhoFotoAntiga !== novoCaminhoFoto
+            ) {
+
+                const {
+                    error: deleteError
+                } = await supabaseClient
+                    .storage
+                    .from(STORAGE_BUCKET)
+                    .remove([
+                        caminhoFotoAntiga
+                    ]);
+
+
+                if (deleteError) {
+
+                    console.warn(
+                        "Não foi possível apagar a foto antiga:",
+                        deleteError
+                    );
+
+                }
+
+            }
+
+
+            mostrarMensagem(
+                arquivoFoto
+                    ? "Procedimento e foto atualizados com sucesso!"
+                    : "Procedimento atualizado com sucesso!",
+                "sucesso"
+            );
+
+
+            await carregarProcedimentos();
+
+        }
+
+
+        /* =====================================================
+           LOGOUT
+        ===================================================== */
+
+        logout.addEventListener(
+            "click",
+            async () => {
+
+                await supabaseClient.auth.signOut();
+
+                window.location.href =
+                    "admin.html";
+
+            }
+        );
+
+
+        /* =====================================================
+           RECARREGAR
+        ===================================================== */
+
+        recarregar.addEventListener(
+            "click",
+            carregarProcedimentos
+        );
+
+
+        /* =====================================================
+           INICIAR
+        ===================================================== */
+
+        async function iniciarPainel() {
+
+            const logado =
+                await verificarLogin();
+
+
+            if (!logado) {
+                return;
+            }
+
+
+            await carregarProcedimentos();
+
+        }
+
+
+        iniciarPainel();
+
+    </script>
+
+</body>
+</html>

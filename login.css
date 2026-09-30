@@ -1,0 +1,443 @@
+/* =====================================================
+   LOGIN ADMINISTRATIVO
+   STUDIO DE BELEZA NAIARA BRAGA
+===================================================== */
+
+
+/* =====================================================
+   VARIÁVEIS
+===================================================== */
+
+:root {
+
+    --fundo: #202124;
+    --fundo-escuro: #18191b;
+
+    --card: #292a2d;
+
+    --campo: #202124;
+
+    --borda: #3a3b3e;
+
+    --dourado: #c8b083;
+    --dourado-claro: #d8c59e;
+
+    --texto: #f3f1ec;
+    --texto-suave: #aaa8a3;
+
+    --verde: #79b892;
+    --vermelho: #c97878;
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
+body {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    background:
+
+        radial-gradient(
+            circle at top right,
+            rgba(200, 176, 131, 0.08),
+            transparent 35%
+        ),
+
+        radial-gradient(
+            circle at bottom left,
+            rgba(200, 176, 131, 0.04),
+            transparent 30%
+        ),
+
+        var(--fundo-escuro);
+
+    color: var(--texto);
+
+    font-family: "Montserrat", sans-serif;
+
+}
+
+
+/* =====================================================
+   CONTAINER DO LOGIN
+===================================================== */
+
+.login-container {
+
+    width: 100%;
+
+    max-width: 430px;
+
+    padding: 45px 42px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 5px;
+
+    background: var(--card);
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.35);
+
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo {
+
+    text-align: center;
+
+    margin-bottom: 38px;
+
+}
+
+
+/* LINHA DECORATIVA */
+
+.logo::before {
+
+    content: "";
+
+    display: block;
+
+    width: 45px;
+
+    height: 1px;
+
+    margin: 0 auto 18px;
+
+    background: var(--dourado);
+
+}
+
+
+/* NOME */
+
+.logo h1 {
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 43px;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    color: var(--texto);
+
+}
+
+
+/* SUBTÍTULO */
+
+.logo p {
+
+    margin-top: 10px;
+
+    color: var(--dourado);
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    letter-spacing: 3px;
+
+    text-transform: uppercase;
+
+}
+
+
+/* =====================================================
+   CAMPOS
+===================================================== */
+
+.form-group {
+
+    margin-bottom: 20px;
+
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--texto-suave);
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+}
+
+
+.form-group input {
+
+    width: 100%;
+
+    height: 46px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--borda);
+
+    border-radius: 3px;
+
+    outline: none;
+
+    background: var(--campo);
+
+    color: var(--texto);
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 13px;
+
+    transition: 0.3s;
+
+}
+
+
+/* PLACEHOLDER */
+
+.form-group input::placeholder {
+
+    color: #6f7073;
+
+}
+
+
+/* FOCO */
+
+.form-group input:focus {
+
+    border-color: var(--dourado);
+
+    box-shadow:
+        0 0 0 3px rgba(200, 176, 131, 0.06);
+
+}
+
+
+/* =====================================================
+   BOTÃO ENTRAR
+===================================================== */
+
+.btn-login {
+
+    width: 100%;
+
+    height: 46px;
+
+    margin-top: 8px;
+
+    border: 1px solid var(--dourado);
+
+    border-radius: 3px;
+
+    background: var(--dourado);
+
+    color: #1b1b1b;
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s,
+        border-color 0.3s,
+        transform 0.2s;
+
+}
+
+
+/* HOVER */
+
+.btn-login:hover {
+
+    background: var(--dourado-claro);
+
+    border-color: var(--dourado-claro);
+
+}
+
+
+/* CLIQUE */
+
+.btn-login:active {
+
+    transform: scale(0.99);
+
+}
+
+
+/* DESABILITADO */
+
+.btn-login:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+}
+
+
+/* =====================================================
+   MENSAGEM
+===================================================== */
+
+.mensagem {
+
+    min-height: 20px;
+
+    margin-top: 18px;
+
+    text-align: center;
+
+    font-size: 12px;
+
+}
+
+
+/* ERRO */
+
+.mensagem.erro {
+
+    color: var(--vermelho);
+
+}
+
+
+/* SUCESSO */
+
+.mensagem.sucesso {
+
+    color: var(--verde);
+
+}
+
+
+/* =====================================================
+   VOLTAR PARA O SITE
+===================================================== */
+
+.voltar {
+
+    display: block;
+
+    margin-top: 28px;
+
+    color: var(--texto-suave);
+
+    text-align: center;
+
+    font-size: 11px;
+
+    text-decoration: none;
+
+    transition: 0.3s;
+
+}
+
+
+.voltar:hover {
+
+    color: var(--dourado);
+
+}
+
+
+/* =====================================================
+   DETALHE INFERIOR
+===================================================== */
+
+.login-container::after {
+
+    content: "";
+
+    display: block;
+
+    width: 45px;
+
+    height: 1px;
+
+    margin: 30px auto -20px;
+
+    background: var(--borda);
+
+}
+
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media (max-width: 500px) {
+
+    body {
+
+        padding: 18px;
+
+    }
+
+
+    .login-container {
+
+        padding: 35px 25px;
+
+    }
+
+
+    .logo h1 {
+
+        font-size: 38px;
+
+    }
+
+}
