@@ -1,28 +1,16 @@
 /* =====================================================
-   CONFIGURAÇÃO DO SUPABASE
+   SUPABASE
 ===================================================== */
 
 const SUPABASE_URL = "https://hyjuuzqdxdarumsqopvn.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY =
+const SUPABASE_KEY =
     "sb_publishable_aaTHViraL-2HzMThmc8ekQ_BYXrjSYH";
 
-let supabaseClient = null;
-
-if (typeof supabase !== "undefined") {
-
-    supabaseClient = supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    );
-
-} else {
-
-    console.error(
-        "Supabase não foi carregado. Verifique a ordem dos scripts no HTML."
-    );
-
-}
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
 
 /* =====================================================
@@ -31,66 +19,25 @@ if (typeof supabase !== "undefined") {
 
 const WHATSAPP_NUMBER = "5547988471657";
 
-let procedimentosBanco = [];
-
 let cart = [];
-
-
-/* =====================================================
-   MENU MOBILE
-===================================================== */
-
-const menuButton =
-    document.getElementById("menu-button");
-
-const nav =
-    document.getElementById("nav");
-
-if (menuButton && nav) {
-
-    menuButton.addEventListener("click", () => {
-
-        nav.classList.toggle("active");
-
-    });
-
-}
-
-
-/* =====================================================
-   FECHAR MENU AO CLICAR EM LINK
-===================================================== */
-
-if (nav) {
-
-    const navLinks =
-        nav.querySelectorAll("a");
-
-    navLinks.forEach(link => {
-
-        link.addEventListener("click", () => {
-
-            nav.classList.remove("active");
-
-        });
-
-    });
-
-}
+let procedimentosBanco = [];
 
 
 /* =====================================================
    NORMALIZAR TEXTO
 ===================================================== */
 
-function normalizeText(text) {
+function normalizarTexto(texto) {
 
-    return String(text || "")
+    if (!texto) return "";
+
+    return texto
+        .toString()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .replace(/\s+/g, " ")
-        .toLowerCase()
-        .trim();
+        .trim()
+        .toLowerCase();
 
 }
 
@@ -99,151 +46,179 @@ function normalizeText(text) {
    FORMATAR PREÇO
 ===================================================== */
 
-function formatPrice(value) {
+function formatarPreco(valor) {
 
-    const number =
-        Number(value) || 0;
+    if (valor === null || valor === undefined || valor === "") {
+        return "";
+    }
 
-    return number.toLocaleString("pt-BR", {
+    const numero = Number(valor);
 
-        minimumFractionDigits: 2,
+    if (Number.isNaN(numero)) {
+        return "";
+    }
 
-        maximumFractionDigits: 2
-
+    return numero.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
     });
 
 }
 
 
 /* =====================================================
-   ENCONTRAR PROCEDIMENTO NO BANCO
+   APELIDOS DOS PROCEDIMENTOS
+===================================================== */
+
+const aliasesProcedimentos = {
+
+    "alongamento quadrado":
+        "alongamento quadrada",
+
+    "alongamento almond":
+        "alongamento almond",
+
+    "alongamento stiletto":
+        "alongamento stiletto",
+
+    "blindagem + esmaltação em gel":
+        "blindagem com esmaltação em gel",
+
+    "blindagem com decoração":
+        "blindagem com esmaltação em gel",
+
+    "esmaltação em gel lisa":
+        "esmaltação em gel",
+
+    "manutenção de esmaltação em gel":
+        "manutenção com esmaltação em gel",
+
+    "remoção":
+        "remoção de gel ou alongamento",
+
+    "design de sobrancelhas sem henna":
+        "personalizado sem rena",
+
+    "design de sobrancelhas com henna":
+        "design com rena",
+
+    "depilação axila":
+        "axila",
+
+    "depilação antebraço":
+        "antebraço",
+
+    "depilação buço":
+        "buço",
+
+    "depilação perna inteira":
+        "perna inteira",
+
+    "depilação meia perna":
+        "meia perna",
+
+    "depilação virilha comum":
+        "virilha comum",
+
+    "depilação virilha total":
+        "virilha total",
+
+    "spa dos pés":
+        "spa dos pés",
+
+    "manicure tradicional":
+        "manicure tradicional",
+
+    "pedicure tradicional":
+        "pedicure tradicional",
+
+    "manicure + pedicure":
+        "manicure + pedicure"
+
+};
+
+
+/* =====================================================
+   ENCONTRAR PROCEDIMENTO NO SUPABASE
 ===================================================== */
 
 function encontrarProcedimento(nomeHTML) {
 
-    const nomeNormalizado =
-        normalizeText(nomeHTML);
-
-    if (!nomeNormalizado) {
-
+    if (!nomeHTML || !procedimentosBanco.length) {
         return null;
+    }
 
+    const nomeNormalizado = normalizarTexto(nomeHTML);
+
+    /* ---------------------------------------------
+       1. BUSCA EXATA
+    --------------------------------------------- */
+
+    let procedimento = procedimentosBanco.find(item => {
+
+        return (
+            normalizarTexto(item.nome) === nomeNormalizado ||
+            normalizarTexto(item.name) === nomeNormalizado
+        );
+
+    });
+
+    if (procedimento) {
+        return procedimento;
     }
 
 
-    /* =================================================
-       1. PROCURA EXATA
-    ================================================= */
+    /* ---------------------------------------------
+       2. BUSCA POR ALIAS
+    --------------------------------------------- */
 
-    let procedimento =
-        procedimentosBanco.find(item => {
+    const alias = aliasesProcedimentos[nomeNormalizado];
 
-            return normalizeText(item.nome) ===
-                nomeNormalizado;
+    if (alias) {
+
+        procedimento = procedimentosBanco.find(item => {
+
+            return (
+                normalizarTexto(item.nome) === alias ||
+                normalizarTexto(item.name) === alias
+            );
 
         });
 
-    if (procedimento) {
-
-        return procedimento;
-
-    }
-
-
-    /* =================================================
-       2. ALIASES
-    ================================================= */
-
-    const aliases = {
-
-        "alongamento quadrado":
-            "alongamento quadrada",
-
-        "alongamento almond":
-            "alongamento almond",
-
-        "alongamento stiletto":
-            "alongamento stiletto",
-
-        "spa dos pes":
-            "spa dos pes",
-
-        "manutencao":
-            "manutencao",
-
-        "remocao":
-            "remocao"
-
-    };
-
-
-    const nomeAlias =
-        aliases[nomeNormalizado];
-
-    if (nomeAlias) {
-
-        procedimento =
-            procedimentosBanco.find(item => {
-
-                return normalizeText(item.nome) ===
-                    nomeAlias;
-
-            });
-
         if (procedimento) {
-
             return procedimento;
-
         }
 
     }
 
 
-    /* =================================================
-       3. PROCURA POR APROXIMAÇÃO SEGURA
-    ================================================= */
+    /* ---------------------------------------------
+       3. BUSCA POR TEXTO CONTIDO
+    --------------------------------------------- */
 
-    const candidatos =
-        procedimentosBanco.filter(item => {
+    const candidatos = procedimentosBanco.filter(item => {
 
-            const nomeBanco =
-                normalizeText(item.nome);
+        const nomeBanco = normalizarTexto(item.nome);
+        const nameBanco = normalizarTexto(item.name);
 
-            if (!nomeBanco) {
-
-                return false;
-
-            }
-
-            return (
-                nomeBanco.includes(nomeNormalizado) ||
-                nomeNormalizado.includes(nomeBanco)
-            );
-
-        });
-
-
-    /*
-       Só aceita quando existe UMA possibilidade.
-    */
-
-    if (candidatos.length === 1) {
-
-        console.log(
-            "Procedimento encontrado por aproximação:",
-            nomeHTML,
-            "→",
-            candidatos[0].nome
+        return (
+            nomeBanco.includes(nomeNormalizado) ||
+            nomeNormalizado.includes(nomeBanco) ||
+            nameBanco.includes(nomeNormalizado) ||
+            nomeNormalizado.includes(nameBanco)
         );
 
-        return candidatos[0];
+    });
 
+
+    if (candidatos.length === 1) {
+        return candidatos[0];
     }
 
 
-    /* =================================================
-       NÃO ENCONTROU
-    ================================================= */
+    /* ---------------------------------------------
+       NÃO ENCONTRADO
+    --------------------------------------------- */
 
     console.warn(
         "Procedimento não encontrado:",
@@ -261,24 +236,12 @@ function encontrarProcedimento(nomeHTML) {
 
 async function carregarProcedimentos() {
 
-    if (!supabaseClient) {
-
-        console.error(
-            "Supabase não está conectado."
-        );
-
-        return;
-
-    }
-
     try {
 
-        const { data, error } =
-            await supabaseClient
-                .from("procedimento")
-                .select("*")
-                .eq("ativo", true);
-
+        const { data, error } = await supabaseClient
+            .from("procedimento")
+            .select("*")
+            .eq("ativo", true);
 
         if (error) {
 
@@ -288,32 +251,27 @@ async function carregarProcedimentos() {
             );
 
             return;
-
         }
 
-
-        procedimentosBanco =
-            data || [];
-
+        procedimentosBanco = data || [];
 
         console.log(
-            "✓ Procedimentos carregados:",
+            "Procedimentos carregados:",
             procedimentosBanco.length
         );
 
 
-        atualizarPrecosDaPagina();
+        atualizarPrecos();
 
-        atualizarFotosDosProcedimentos();
+        atualizarFotos();
 
         ativarBotoesServicos();
 
-
-    } catch (error) {
+    } catch (erro) {
 
         console.error(
             "Erro inesperado ao carregar procedimentos:",
-            error
+            erro
         );
 
     }
@@ -322,100 +280,63 @@ async function carregarProcedimentos() {
 
 
 /* =====================================================
-   ATUALIZAR PREÇOS DA PÁGINA
+   ATUALIZAR PREÇOS
 ===================================================== */
 
-function atualizarPrecosDaPagina() {
+function atualizarPrecos() {
 
-    const botoes =
-        document.querySelectorAll(
-            ".add-service"
-        );
+    document.querySelectorAll(".add-service").forEach(button => {
 
-
-    botoes.forEach(button => {
-
-        const nomeServico =
+        const nomeHTML =
             button.dataset.service;
 
-        if (!nomeServico) {
-
-            return;
-
-        }
-
+        if (!nomeHTML) return;
 
         const procedimento =
-            encontrarProcedimento(
-                nomeServico
-            );
+            encontrarProcedimento(nomeHTML);
 
-
-        if (!procedimento) {
-
-            return;
-
-        }
+        if (!procedimento) return;
 
 
         const preco =
-            Number(procedimento.preco) || 0;
+            procedimento.preco ??
+            procedimento.preco_base ??
+            procedimento.valor ??
+            procedimento.price;
 
 
-        button.dataset.price =
-            preco;
+        if (
+            preco === null ||
+            preco === undefined ||
+            preco === ""
+        ) {
+            return;
+        }
 
 
         const card =
             button.closest(
-                ".price-card, .simple-card, .spa-content, .service-card, .gallery-card, article, .card"
+                ".price-card, .simple-card, .service-card, .gallery-card, article, .card"
             );
 
-
-        if (!card) {
-
-            return;
-
-        }
+        if (!card) return;
 
 
-        const priceElement =
-            card.querySelector(".price");
+        const elementosPreco =
+            card.querySelectorAll(
+                ".price, .spa-price, strong"
+            );
 
+        elementosPreco.forEach(elemento => {
 
-        if (priceElement) {
+            if (elemento.closest("button")) {
+                return;
+            }
 
-            priceElement.textContent =
-                `R$ ${formatPrice(preco)}`;
+            elemento.textContent =
+                formatarPreco(preco);
 
-        }
-
-
-        const strong =
-            card.querySelector("strong");
-
-
-        if (
-            strong &&
-            !strong.closest(".add-service")
-        ) {
-
-            strong.textContent =
-                `R$ ${formatPrice(preco)}`;
-
-        }
-
-
-        const spaPrice =
-            card.querySelector(".spa-price");
-
-
-        if (spaPrice) {
-
-            spaPrice.textContent =
-                `R$ ${formatPrice(preco)}`;
-
-        }
+        });
 
     });
 
@@ -423,388 +344,329 @@ function atualizarPrecosDaPagina() {
 
 
 /* =====================================================
-   ATUALIZAR FOTOS DOS PROCEDIMENTOS
+   ATUALIZAR FOTOS PELO SUPABASE
 ===================================================== */
 
-function atualizarFotosDosProcedimentos() {
+function atualizarFotos() {
 
-    if (!supabaseClient) {
-
-        console.error(
-            "Não foi possível atualizar as fotos porque o Supabase não está conectado."
-        );
-
+    if (!procedimentosBanco.length) {
         return;
-
     }
 
 
-    console.log(
-        "Verificando fotos dos procedimentos..."
-    );
+    document.querySelectorAll("img").forEach(img => {
 
+        const alt =
+            img.alt || "";
 
-    procedimentosBanco.forEach(procedimento => {
+        if (!alt) return;
 
-        if (!procedimento.foto) {
 
-            return;
+        let procedimento =
+            encontrarProcedimento(alt);
 
-        }
 
+        /*
+           Alguns ALT do HTML podem ser diferentes
+           do nome do procedimento.
+        */
 
-        const nomeProcedimento =
-            procedimento.nome;
+        if (!procedimento) {
 
+            const altNormalizado =
+                normalizarTexto(alt);
 
-        const nomeNormalizado =
-            normalizeText(
-                nomeProcedimento
-            );
 
+            if (
+                altNormalizado.includes("volume light") ||
+                altNormalizado.includes("cilios light")
+            ) {
 
-        const { data } =
-            supabaseClient
-                .storage
-                .from("procedimento")
-                .getPublicUrl(
-                    procedimento.foto
-                );
+                procedimento =
+                    encontrarProcedimento("Volume Light");
 
+            }
 
-        if (
-            !data ||
-            !data.publicUrl
-        ) {
+            else if (
+                altNormalizado.includes("volume brasileiro")
+            ) {
 
-            console.warn(
-                "Não foi possível gerar a URL da foto:",
-                procedimento
-            );
+                procedimento =
+                    encontrarProcedimento("Volume Brasileiro");
 
-            return;
+            }
 
-        }
+            else if (
+                altNormalizado.includes("volume egipcio") ||
+                altNormalizado.includes("cilios egipcio")
+            ) {
 
+                procedimento =
+                    encontrarProcedimento("Volume Egípcio");
 
-        const fotoURL =
-            data.publicUrl;
+            }
 
+            else if (
+                altNormalizado.includes("quadrad")
+            ) {
 
-        console.log(
-            `Foto encontrada: ${nomeProcedimento}`,
-            fotoURL
-        );
+                procedimento =
+                    encontrarProcedimento("Alongamento quadrado");
 
+            }
 
-        /* =================================================
-           CÍLIOS
-        ================================================= */
+            else if (
+                altNormalizado.includes("almond")
+            ) {
 
-        if (
-            nomeNormalizado === "volume light" ||
-            nomeNormalizado === "volume brasileiro" ||
-            nomeNormalizado === "volume egipcio"
-        ) {
+                procedimento =
+                    encontrarProcedimento("Alongamento almond");
 
-            const imagens =
-                document.querySelectorAll(
-                    "#cilios .service-gallery img"
-                );
+            }
 
+            else if (
+                altNormalizado.includes("stiletto")
+            ) {
 
-            imagens.forEach(imagem => {
-
-                const alt =
-                    normalizeText(
-                        imagem.alt
-                    );
-
-
-                if (
-                    nomeNormalizado === "volume light" &&
-                    alt.includes("volume light")
-                ) {
-
-                    imagem.src =
-                        fotoURL;
-
-                    imagem.dataset.supabaseFoto =
-                        "true";
-
-                }
-
-
-                if (
-                    nomeNormalizado === "volume brasileiro" &&
-                    alt.includes("volume brasileiro")
-                ) {
-
-                    imagem.src =
-                        fotoURL;
-
-                    imagem.dataset.supabaseFoto =
-                        "true";
-
-                }
-
-
-                if (
-                    nomeNormalizado === "volume egipcio" &&
-                    alt.includes("volume egipcio")
-                ) {
-
-                    imagem.src =
-                        fotoURL;
-
-                    imagem.dataset.supabaseFoto =
-                        "true";
-
-                }
-
-            });
-
-        }
-
-
-        /* =================================================
-           UNHAS
-        ================================================= */
-
-        if (
-            nomeNormalizado === "alongamento quadrada" ||
-            nomeNormalizado === "alongamento almond" ||
-            nomeNormalizado === "alongamento stiletto"
-        ) {
-
-            const imagens =
-                document.querySelectorAll(
-                    "#unhas .service-gallery img"
-                );
-
-
-            imagens.forEach(imagem => {
-
-                const alt =
-                    normalizeText(
-                        imagem.alt
-                    );
-
-
-                if (
-                    nomeNormalizado === "alongamento quadrada" &&
-                    alt.includes("formato quadrado")
-                ) {
-
-                    imagem.src =
-                        fotoURL;
-
-                    imagem.dataset.supabaseFoto =
-                        "true";
-
-                }
-
-
-                if (
-                    nomeNormalizado === "alongamento almond" &&
-                    alt.includes("formato almond")
-                ) {
-
-                    imagem.src =
-                        fotoURL;
-
-                    imagem.dataset.supabaseFoto =
-                        "true";
-
-                }
-
-
-                if (
-                    nomeNormalizado === "alongamento stiletto" &&
-                    alt.includes("formato stiletto")
-                ) {
-
-                    imagem.src =
-                        fotoURL;
-
-                    imagem.dataset.supabaseFoto =
-                        "true";
-
-                }
-
-            });
-
-        }
-
-
-        /* =================================================
-           SPA DOS PÉS
-        ================================================= */
-
-        if (
-            nomeNormalizado === "spa dos pes"
-        ) {
-
-            const imagem =
-                document.querySelector(
-                    "#spa .spa-image img"
-                );
-
-
-            if (imagem) {
-
-                imagem.src =
-                    fotoURL;
-
-                imagem.dataset.supabaseFoto =
-                    "true";
+                procedimento =
+                    encontrarProcedimento("Alongamento stiletto");
 
             }
 
         }
 
+
+        if (
+            !procedimento ||
+            !procedimento.foto
+        ) {
+            return;
+        }
+
+
+        const {
+            data
+        } = supabaseClient
+            .storage
+            .from("procedimento")
+            .getPublicUrl(procedimento.foto);
+
+
+        if (
+            data &&
+            data.publicUrl
+        ) {
+
+            img.src = data.publicUrl;
+
+        }
+
     });
+
+
+    /*
+       SPA DOS PÉS
+    */
+
+    const spaImagem =
+        document.querySelector(
+            "#spa .spa-image img"
+        );
+
+    if (spaImagem) {
+
+        const procedimento =
+            encontrarProcedimento(
+                "Spa dos pés"
+            );
+
+        if (
+            procedimento &&
+            procedimento.foto
+        ) {
+
+            const {
+                data
+            } = supabaseClient
+                .storage
+                .from("procedimento")
+                .getPublicUrl(procedimento.foto);
+
+            if (
+                data &&
+                data.publicUrl
+            ) {
+
+                spaImagem.src =
+                    data.publicUrl;
+
+            }
+
+        }
+
+    }
 
 }
 
 
 /* =====================================================
-   ATIVAR BOTÕES DOS SERVIÇOS
+   BOTÕES DOS SERVIÇOS
 ===================================================== */
 
 function ativarBotoesServicos() {
 
-    const botoes =
-        document.querySelectorAll(
-            ".add-service"
-        );
+    document
+        .querySelectorAll(".add-service")
+        .forEach(button => {
+
+            if (
+                button.dataset.eventoAtivo === "true"
+            ) {
+                return;
+            }
 
 
-    botoes.forEach(button => {
-
-        if (
-            button.dataset.eventoAtivo === "true"
-        ) {
-
-            return;
-
-        }
+            button.dataset.eventoAtivo = "true";
 
 
-        button.dataset.eventoAtivo =
-            "true";
+            button.addEventListener(
+                "click",
+                function(event) {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
 
 
-        button.addEventListener(
-            "click",
-            () => {
+                    const nome =
+                        this.dataset.service;
 
-                const nomeServico =
-                    button.dataset.service;
+                    if (!nome) {
 
-
-                if (!nomeServico) {
-
-                    return;
-
-                }
-
-
-                const procedimento =
-                    encontrarProcedimento(
-                        nomeServico
-                    );
-
-
-                if (!procedimento) {
-
-                    console.warn(
-                        "Não foi possível adicionar:",
-                        nomeServico
-                    );
-
-                    return;
-
-                }
-
-
-                const preco =
-                    Number(
-                        procedimento.preco
-                    ) || 0;
-
-
-                const existente =
-                    cart.find(item => {
-
-                        return normalizeText(
-                            item.service
-                        ) ===
-                        normalizeText(
-                            procedimento.nome
+                        console.warn(
+                            "Botão sem data-service:",
+                            this
                         );
 
-                    });
+                        return;
+                    }
 
 
-                if (existente) {
-
-                    existente.quantity =
-                        (existente.quantity || 1) + 1;
+                    const procedimento =
+                        encontrarProcedimento(nome);
 
 
-                } else {
+                    if (!procedimento) {
 
-                    cart.push({
+                        console.warn(
+                            "Não foi possível adicionar:",
+                            nome
+                        );
 
-                        service:
-                            procedimento.nome,
-
-                        price:
-                            preco,
-
-                        quantity:
-                            1,
-
-                        maintenance:
-                            button.dataset.maintenance || ""
-
-                    });
-
-                }
+                        return;
+                    }
 
 
-                renderCart();
-
-
-                const textoOriginal =
-                    button.textContent;
-
-
-                button.textContent =
-                    "Adicionado ✓";
-
-
-                button.classList.add(
-                    "added"
-                );
-
-
-                setTimeout(() => {
-
-                    button.textContent =
-                        textoOriginal;
-
-                    button.classList.remove(
-                        "added"
+                    adicionarAoCarrinho(
+                        procedimento,
+                        this
                     );
 
-                }, 1200);
+                }
+            );
 
-            }
-        );
+        });
 
-    });
+}
+
+
+/* =====================================================
+   ADICIONAR AO CARRINHO
+===================================================== */
+
+function adicionarAoCarrinho(
+    procedimento,
+    button = null
+) {
+
+    const nome =
+        procedimento.nome ||
+        procedimento.name;
+
+
+    const preco =
+        procedimento.preco ??
+        procedimento.preco_base ??
+        procedimento.valor ??
+        procedimento.price ??
+        0;
+
+
+    const manutencao =
+        button?.dataset?.maintenance ||
+        "";
+
+
+    const existente =
+        cart.find(item => {
+
+            return (
+                item.id === procedimento.id &&
+                item.maintenance === manutencao
+            );
+
+        });
+
+
+    if (existente) {
+
+        existente.quantidade++;
+
+    } else {
+
+        cart.push({
+
+            id: procedimento.id,
+
+            nome: nome,
+
+            preco: Number(preco) || 0,
+
+            maintenance: manutencao,
+
+            quantidade: 1
+
+        });
+
+    }
+
+
+    renderCart();
+
+    abrirAgendamento();
+
+
+    if (button) {
+
+        const textoOriginal =
+            button.dataset.textoOriginal ||
+            button.textContent;
+
+        button.dataset.textoOriginal =
+            textoOriginal;
+
+        button.textContent =
+            "Adicionado ✓";
+
+
+        setTimeout(() => {
+
+            button.textContent =
+                textoOriginal;
+
+        }, 1500);
+
+    }
 
 }
 
@@ -820,18 +682,15 @@ function renderCart() {
             "cart-items"
         );
 
-
     const cartTotal =
         document.getElementById(
             "cart-total"
         );
 
-
     const cartCount =
         document.getElementById(
             "cart-count"
         );
-
 
     const cartEmpty =
         document.getElementById(
@@ -843,129 +702,110 @@ function renderCart() {
 
         cartItems.innerHTML = "";
 
-    }
+
+        cart.forEach((item, index) => {
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "cart-item";
 
 
-    if (cart.length === 0) {
-
-        if (cartItems) {
-
-            cartItems.innerHTML =
-                "<p>Nenhum serviço selecionado.</p>";
-
-        }
-
-        if (cartEmpty) {
-
-            cartEmpty.style.display =
-                "block";
-
-        }
-
-    } else {
-
-        if (cartEmpty) {
-
-            cartEmpty.style.display =
-                "none";
-
-        }
+            const subtotal =
+                item.preco *
+                item.quantidade;
 
 
-        if (cartItems) {
+            div.innerHTML = `
 
-            cart.forEach((item, index) => {
+                <div class="cart-item-top">
 
-                const div =
-                    document.createElement(
-                        "div"
-                    );
+                    <div>
 
+                        <h4>
+                            ${item.nome}
+                        </h4>
 
-                div.className =
-                    "cart-item";
-
-
-                const quantidade =
-                    item.quantity || 1;
-
-
-                div.innerHTML = `
-
-                    <div class="cart-item-top">
-
-                        <div>
-
-                            <h4>
-                                ${item.service}
-                            </h4>
-
-                            ${
-                                item.maintenance
-                                    ? `
-                                        <small>
-                                            ${item.maintenance}
-                                        </small>
-                                    `
-                                    : ""
-                            }
-
-                        </div>
-
-                        <span class="cart-item-price">
-                            R$ ${formatPrice(
-                                Number(item.price) *
-                                quantidade
-                            )}
-                        </span>
+                        ${
+                            item.maintenance
+                                ? `
+                                    <small>
+                                        ${item.maintenance}
+                                    </small>
+                                  `
+                                : ""
+                        }
 
                     </div>
 
-                    <button
-                        type="button"
-                        class="cart-item-remove"
-                        data-index="${index}"
-                    >
-                        Remover
-                    </button>
+                    <span class="cart-item-price">
+                        ${formatarPreco(subtotal)}
+                    </span>
 
-                `;
+                </div>
+
+                <button
+                    type="button"
+                    class="cart-item-remove"
+                    data-index="${index}"
+                >
+                    Remover
+                </button>
+
+            `;
 
 
-                cartItems.appendChild(
-                    div
+            cartItems.appendChild(div);
+
+        });
+
+
+        cartItems
+            .querySelectorAll(".cart-item-remove")
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        const index =
+                            Number(
+                                this.dataset.index
+                            );
+
+                        cart.splice(
+                            index,
+                            1
+                        );
+
+                        renderCart();
+
+                    }
                 );
 
             });
-
-        }
 
     }
 
 
     const total =
         cart.reduce(
-            (sum, item) => {
-
-                return sum +
-                    (
-                        Number(item.price || 0) *
-                        (item.quantity || 1)
-                    );
-
-            },
+            (soma, item) =>
+                soma +
+                (
+                    item.preco *
+                    item.quantidade
+                ),
             0
         );
 
 
-    const quantidadeTotal =
+    const quantidade =
         cart.reduce(
-            (sum, item) => {
-
-                return sum +
-                    (item.quantity || 1);
-
-            },
+            (soma, item) =>
+                soma +
+                item.quantidade,
             0
         );
 
@@ -973,7 +813,7 @@ function renderCart() {
     if (cartTotal) {
 
         cartTotal.textContent =
-            `R$ ${formatPrice(total)}`;
+            formatarPreco(total);
 
     }
 
@@ -981,39 +821,17 @@ function renderCart() {
     if (cartCount) {
 
         cartCount.textContent =
-            quantidadeTotal;
+            quantidade;
 
     }
 
 
-    document
-        .querySelectorAll(
-            ".cart-item-remove"
-        )
-        .forEach(button => {
+    if (cartEmpty) {
 
-            button.addEventListener(
-                "click",
-                () => {
+        cartEmpty.hidden =
+            cart.length > 0;
 
-                    const index =
-                        Number(
-                            button.dataset.index
-                        );
-
-
-                    cart.splice(
-                        index,
-                        1
-                    );
-
-
-                    renderCart();
-
-                }
-            );
-
-        });
+    }
 
 }
 
@@ -1022,17 +840,17 @@ function renderCart() {
    LIMPAR CARRINHO
 ===================================================== */
 
-const clearCartButton =
+const clearCart =
     document.getElementById(
         "clear-cart"
     );
 
 
-if (clearCartButton) {
+if (clearCart) {
 
-    clearCartButton.addEventListener(
+    clearCart.addEventListener(
         "click",
-        () => {
+        function() {
 
             cart = [];
 
@@ -1045,72 +863,7 @@ if (clearCartButton) {
 
 
 /* =====================================================
-   MANUTENÇÃO DOS CÍLIOS
-===================================================== */
-
-document
-    .querySelectorAll(
-        "[data-maintenance]"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                const maintenance =
-                    button.dataset.maintenance;
-
-
-                document
-                    .querySelectorAll(
-                        "[data-maintenance]"
-                    )
-                    .forEach(item => {
-
-                        item.classList.remove(
-                            "active"
-                        );
-
-                    });
-
-
-                button.classList.add(
-                    "active"
-                );
-
-
-                const selectedService =
-                    button.closest(
-                        ".service-card, .price-card, article, .card"
-                    );
-
-
-                if (selectedService) {
-
-                    const addButton =
-                        selectedService.querySelector(
-                            ".add-service"
-                        );
-
-
-                    if (addButton) {
-
-                        addButton.dataset.maintenance =
-                            maintenance;
-
-                    }
-
-                }
-
-            }
-        );
-
-    });
-
-
-/* =====================================================
-   CONTROLE DO AGENDAMENTO
+   BOTÃO DO CARRINHO
 ===================================================== */
 
 const cartButton =
@@ -1118,34 +871,19 @@ const cartButton =
         "cart-button"
     );
 
-
 const cartDrawer =
     document.getElementById(
         "cart-drawer"
     );
-
 
 const cartOverlay =
     document.getElementById(
         "cart-overlay"
     );
 
-
 const cartClose =
     document.getElementById(
         "cart-close"
-    );
-
-
-const openCartButtons =
-    document.querySelectorAll(
-        ".open-cart"
-    );
-
-
-const closeCartButtons =
-    document.querySelectorAll(
-        ".close-cart"
     );
 
 
@@ -1155,19 +893,13 @@ const closeCartButtons =
 
 function abrirAgendamento() {
 
-    console.log(
-        "Abrindo agendamento..."
-    );
-
-
     if (!cartDrawer) {
 
         console.error(
-            "ERRO: #cart-drawer não encontrado."
+            "Elemento #cart-drawer não encontrado."
         );
 
         return;
-
     }
 
 
@@ -1224,14 +956,20 @@ function fecharAgendamento() {
 
 
 /* =====================================================
-   BOTÃO DO CARRINHO
+   BOTÃO DO ÍCONE DO CARRINHO
 ===================================================== */
 
 if (cartButton) {
 
     cartButton.addEventListener(
         "click",
-        abrirAgendamento
+        function(event) {
+
+            event.preventDefault();
+
+            abrirAgendamento();
+
+        }
     );
 
 }
@@ -1241,24 +979,26 @@ if (cartButton) {
    BOTÕES "AGENDAR HORÁRIO"
 ===================================================== */
 
-openCartButtons.forEach(button => {
+document
+    .querySelectorAll(".open-cart")
+    .forEach(button => {
 
-    button.addEventListener(
-        "click",
-        event => {
+        button.addEventListener(
+            "click",
+            function(event) {
 
-            event.preventDefault();
+                event.preventDefault();
 
-            abrirAgendamento();
+                abrirAgendamento();
 
-        }
-    );
+            }
+        );
 
-});
+    });
 
 
 /* =====================================================
-   BOTÃO X
+   FECHAR
 ===================================================== */
 
 if (cartClose) {
@@ -1271,24 +1011,6 @@ if (cartClose) {
 }
 
 
-/* =====================================================
-   BOTÕES DE FECHAR
-===================================================== */
-
-closeCartButtons.forEach(button => {
-
-    button.addEventListener(
-        "click",
-        fecharAgendamento
-    );
-
-});
-
-
-/* =====================================================
-   CLICAR NO FUNDO
-===================================================== */
-
 if (cartOverlay) {
 
     cartOverlay.addEventListener(
@@ -1299,15 +1021,25 @@ if (cartOverlay) {
 }
 
 
-/* =====================================================
-   TECLA ESC
-===================================================== */
+document
+    .querySelectorAll(".close-cart")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            fecharAgendamento
+        );
+
+    });
+
 
 document.addEventListener(
     "keydown",
-    event => {
+    function(event) {
 
-        if (event.key === "Escape") {
+        if (
+            event.key === "Escape"
+        ) {
 
             fecharAgendamento();
 
@@ -1318,23 +1050,63 @@ document.addEventListener(
 
 
 /* =====================================================
-   BOTÃO WHATSAPP
+   MANUTENÇÃO DOS CÍLIOS
 ===================================================== */
 
-const whatsappCart =
-    document.getElementById(
-        "whatsapp-cart"
-    );
+document
+    .querySelectorAll("[data-maintenance]")
+    .forEach(element => {
+
+        element.addEventListener(
+            "click",
+            function() {
+
+                document
+                    .querySelectorAll(
+                        "[data-maintenance]"
+                    )
+                    .forEach(item => {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    });
 
 
-if (whatsappCart) {
+                this.classList.add(
+                    "active"
+                );
 
-    whatsappCart.addEventListener(
-        "click",
-        enviarAgendamentoWhatsApp
-    );
 
-}
+                const maintenance =
+                    this.dataset.maintenance;
+
+
+                const serviceButton =
+                    this
+                        .closest(
+                            ".service-card, .price-card, .gallery-card, article, .card"
+                        )
+                        ?.querySelector(
+                            ".add-service"
+                        );
+
+
+                if (
+                    serviceButton &&
+                    maintenance
+                ) {
+
+                    serviceButton.dataset.maintenance =
+                        maintenance;
+
+                }
+
+            }
+        );
+
+    });
 
 
 /* =====================================================
@@ -1343,82 +1115,46 @@ if (whatsappCart) {
 
 function enviarAgendamentoWhatsApp() {
 
-    if (
-        !cart ||
-        cart.length === 0
-    ) {
-
-        alert(
-            "Selecione pelo menos um procedimento antes de agendar."
-        );
-
-        return;
-
-    }
-
-
-    /* =================================================
-       DADOS DO CLIENTE
-    ================================================= */
-
     const nome =
-        document
-            .getElementById(
-                "client-name"
-            )
-            ?.value
-            .trim() || "";
+        document.getElementById(
+            "client-name"
+        )?.value.trim();
 
 
     const telefone =
-        document
-            .getElementById(
-                "client-phone"
-            )
-            ?.value
-            .trim() || "";
+        document.getElementById(
+            "client-phone"
+        )?.value.trim();
 
 
     const profissional =
-        document
-            .getElementById(
-                "professional"
-            )
-            ?.value || "";
+        document.getElementById(
+            "professional"
+        )?.value;
 
 
     const data =
-        document
-            .getElementById(
-                "booking-date"
-            )
-            ?.value || "";
+        document.getElementById(
+            "booking-date"
+        )?.value;
 
 
     const horario =
-        document
-            .getElementById(
-                "booking-time"
-            )
-            ?.value || "";
+        document.getElementById(
+            "booking-time"
+        )?.value;
 
 
     const pagamento =
-        document
-            .getElementById(
-                "payment-method"
-            )
-            ?.value || "";
+        document.getElementById(
+            "payment-method"
+        )?.value;
 
-
-    /* =================================================
-       VALIDAÇÕES
-    ================================================= */
 
     if (!nome) {
 
         alert(
-            "Informe seu nome."
+            "Digite seu nome."
         );
 
         return;
@@ -1429,18 +1165,7 @@ function enviarAgendamentoWhatsApp() {
     if (!telefone) {
 
         alert(
-            "Informe seu WhatsApp."
-        );
-
-        return;
-
-    }
-
-
-    if (!profissional) {
-
-        alert(
-            "Escolha a profissional."
+            "Digite seu telefone."
         );
 
         return;
@@ -1481,128 +1206,119 @@ function enviarAgendamentoWhatsApp() {
     }
 
 
-    /* =================================================
-       PROCEDIMENTOS
-    ================================================= */
+    if (!cart.length) {
 
-    let servicesMessage = "";
+        alert(
+            "Adicione pelo menos um procedimento."
+        );
+
+        return;
+
+    }
+
+
+    let mensagem =
+        "Olá! Gostaria de agendar um horário.%0A%0A";
+
+
+    mensagem +=
+        "*Cliente:* " +
+        encodeURIComponent(nome) +
+        "%0A";
+
+
+    mensagem +=
+        "*Telefone:* " +
+        encodeURIComponent(telefone) +
+        "%0A";
+
+
+    if (profissional) {
+
+        mensagem +=
+            "*Profissional:* " +
+            encodeURIComponent(profissional) +
+            "%0A";
+
+    }
+
+
+    mensagem +=
+        "*Data:* " +
+        encodeURIComponent(data) +
+        "%0A";
+
+
+    mensagem +=
+        "*Horário:* " +
+        encodeURIComponent(horario) +
+        "%0A";
+
+
+    mensagem +=
+        "*Pagamento:* " +
+        encodeURIComponent(pagamento) +
+        "%0A%0A";
+
+
+    mensagem +=
+        "*Procedimentos:*%0A";
 
 
     cart.forEach(item => {
 
-        const quantidade =
-            item.quantity || 1;
-
-
-        servicesMessage +=
-            `\n• ${item.service}`;
-
-
-        if (quantidade > 1) {
-
-            servicesMessage +=
-                ` x${quantidade}`;
-
-        }
+        mensagem +=
+            "- " +
+            encodeURIComponent(
+                item.nome
+            ) +
+            " x" +
+            item.quantidade +
+            " - " +
+            encodeURIComponent(
+                formatarPreco(
+                    item.preco *
+                    item.quantidade
+                )
+            ) +
+            "%0A";
 
 
         if (item.maintenance) {
 
-            servicesMessage +=
-                ` (${item.maintenance})`;
+            mensagem +=
+                "  Manutenção: " +
+                encodeURIComponent(
+                    item.maintenance
+                ) +
+                "%0A";
 
         }
-
-
-        const valor =
-            Number(item.price || 0) *
-            quantidade;
-
-
-        servicesMessage +=
-            ` — R$ ${formatPrice(valor)}`;
 
     });
 
 
-    /* =================================================
-       TOTAL
-    ================================================= */
-
     const total =
         cart.reduce(
-            (sum, item) => {
-
-                return sum +
-                    (
-                        Number(item.price || 0) *
-                        (item.quantity || 1)
-                    );
-
-            },
+            (soma, item) =>
+                soma +
+                (
+                    item.preco *
+                    item.quantidade
+                ),
             0
         );
 
 
-    /* =================================================
-       DATA
-    ================================================= */
+    mensagem +=
+        "%0A*Total:* " +
+        encodeURIComponent(
+            formatarPreco(total)
+        );
 
-    const dataFormatada =
-        data
-            .split("-")
-            .reverse()
-            .join("/");
-
-
-    /* =================================================
-       MENSAGEM
-    ================================================= */
-
-    let message =
-        "Olá! Gostaria de solicitar um agendamento.\n\n";
-
-
-    message +=
-        `*Nome:* ${nome}\n`;
-
-
-    message +=
-        `*WhatsApp:* ${telefone}\n`;
-
-
-    message +=
-        `*Profissional:* ${profissional}\n`;
-
-
-    message +=
-        `*Data:* ${dataFormatada}\n`;
-
-
-    message +=
-        `*Horário:* ${horario}\n`;
-
-
-    message +=
-        `*Forma de pagamento:* ${pagamento}\n`;
-
-
-    message +=
-        `\n*Procedimentos:*${servicesMessage}\n`;
-
-
-    message +=
-        `\n*Total:* R$ ${formatPrice(total)}\n`;
-
-
-    /* =================================================
-       ABRIR WHATSAPP
-    ================================================= */
 
     const url =
-        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-            message
-        )}`;
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${mensagem}`;
 
 
     window.open(
@@ -1614,7 +1330,27 @@ function enviarAgendamentoWhatsApp() {
 
 
 /* =====================================================
-   ATUALIZAR LINKS DO WHATSAPP
+   BOTÃO WHATSAPP DO AGENDAMENTO
+===================================================== */
+
+const whatsappCart =
+    document.getElementById(
+        "whatsapp-cart"
+    );
+
+
+if (whatsappCart) {
+
+    whatsappCart.addEventListener(
+        "click",
+        enviarAgendamentoWhatsApp
+    );
+
+}
+
+
+/* =====================================================
+   LINKS DO WHATSAPP
 ===================================================== */
 
 document
@@ -1623,40 +1359,70 @@ document
     )
     .forEach(link => {
 
-        const href =
-            link.getAttribute(
-                "href"
-            );
-
-
-        if (!href) {
-
-            return;
-
-        }
-
-
-        if (
-            href.includes(
-                "wa.me/"
-            )
-        ) {
-
-            const novaURL =
-                href.replace(
-                    /wa\.me\/\d+/,
-                    `wa.me/${WHATSAPP_NUMBER}`
-                );
-
-
-            link.setAttribute(
-                "href",
-                novaURL
-            );
-
-        }
+        link.href =
+            `https://wa.me/${WHATSAPP_NUMBER}`;
 
     });
+
+
+/* =====================================================
+   MENU MOBILE
+===================================================== */
+
+const menuButton =
+    document.getElementById(
+        "menu-button"
+    );
+
+const nav =
+    document.getElementById(
+        "nav"
+    );
+
+
+if (
+    menuButton &&
+    nav
+) {
+
+    menuButton.addEventListener(
+        "click",
+        function() {
+
+            nav.classList.toggle(
+                "active"
+            );
+
+            menuButton.classList.toggle(
+                "active"
+            );
+
+        }
+    );
+
+
+    nav
+        .querySelectorAll("a")
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                function() {
+
+                    nav.classList.remove(
+                        "active"
+                    );
+
+                    menuButton.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+        });
+
+}
 
 
 /* =====================================================
@@ -1671,60 +1437,38 @@ document
 
         link.addEventListener(
             "click",
-            event => {
+            function(event) {
 
-                const targetId =
-                    link.getAttribute(
+                const destino =
+                    this.getAttribute(
                         "href"
                     );
 
 
                 if (
-                    !targetId ||
-                    targetId === "#"
+                    !destino ||
+                    destino === "#"
                 ) {
-
                     return;
-
                 }
 
 
-                /*
-                   Não impedir o funcionamento
-                   dos botões que abrem o carrinho.
-                */
-
-                if (
-                    link.classList.contains(
-                        "open-cart"
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                const target =
+                const elemento =
                     document.querySelector(
-                        targetId
+                        destino
                     );
 
 
-                if (!target) {
-
+                if (!elemento) {
                     return;
-
                 }
 
 
                 event.preventDefault();
 
 
-                target.scrollIntoView({
-
+                elemento.scrollIntoView({
                     behavior: "smooth"
-
                 });
 
             }
@@ -1739,4 +1483,4 @@ document
 
 renderCart();
 
-
+carregarProcedimentos();
