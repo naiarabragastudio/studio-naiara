@@ -150,6 +150,7 @@ function encontrarProcedimento(nomeHTML) {
 
     const nomeNormalizado = normalizarTexto(nomeHTML);
 
+
     /* ---------------------------------------------
        1. BUSCA EXATA
     --------------------------------------------- */
@@ -602,9 +603,46 @@ function adicionarAoCarrinho(
         0;
 
 
-    const manutencao =
+    /*
+       PEGA A MANUTENÇÃO SELECIONADA.
+
+       Se vier um JSON com várias opções,
+       não vamos colocar esse JSON no carrinho.
+    */
+
+    let manutencao =
         button?.dataset?.maintenance ||
         "";
+
+
+    if (manutencao) {
+
+        try {
+
+            const dadosManutencao =
+                JSON.parse(manutencao);
+
+            /*
+               Se for uma lista de opções,
+               não mostrar a lista inteira.
+            */
+
+            if (Array.isArray(dadosManutencao)) {
+
+                manutencao = "";
+
+            }
+
+        } catch (erro) {
+
+            /*
+               Se não for JSON,
+               mantém o texto normalmente.
+            */
+
+        }
+
+    }
 
 
     const existente =
