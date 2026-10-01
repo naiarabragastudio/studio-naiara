@@ -2475,3 +2475,22 @@ footer p a:hover {
     visibility: visible !important;
     opacity: 1 !important;
 }
+
+/* =====================================================
+   LINK DA ÁREA ADMINISTRATIVA
+===================================================== */
+
+.admin-link {
+    margin-top: 10px;
+}
+
+.admin-link a {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 11px;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.admin-link a:hover {
+    color: rgba(255, 255, 255, 0.85);
+}

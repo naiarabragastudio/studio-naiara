@@ -48,7 +48,11 @@ function normalizarTexto(texto) {
 
 function formatarPreco(valor) {
 
-    if (valor === null || valor === undefined || valor === "") {
+    if (
+        valor === null ||
+        valor === undefined ||
+        valor === ""
+    ) {
         return "";
     }
 
@@ -67,40 +71,125 @@ function formatarPreco(valor) {
 
 
 /* =====================================================
-   APELIDOS DOS PROCEDIMENTOS
+   APELIDOS E VARIAÇÕES DOS PROCEDIMENTOS
 ===================================================== */
 
 const aliasesProcedimentos = {
 
+    /* =========================
+       CÍLIOS
+    ========================== */
+
+    "cilios light":
+        "luz de volume",
+
+    "cilios luz de volume":
+        "luz de volume",
+
+    "volume light":
+        "luz de volume",
+
+    "luz de volume":
+        "luz de volume",
+
+    "cilios brasileiro":
+        "volume brasileiro",
+
+    "volume brasileiro":
+        "volume brasileiro",
+
+    "cilios egipcio":
+        "volume egipcio",
+
+    "volume egipcio":
+        "volume egipcio",
+
+    "volume brasileiro volumoso":
+        "volume brasileiro volumoso",
+
+    "brasileiro volumoso":
+        "volume brasileiro volumoso",
+
+
+    /* =========================
+       UNHAS
+    ========================== */
+
     "alongamento quadrado":
-        "alongamento quadrada",
+        "alongamento quadrado",
+
+    "alongamento quadrada":
+        "alongamento quadrado",
 
     "alongamento almond":
-        "alongamento almond",
+        "alongamento de amêndoa",
+
+    "alongamento de amendoa":
+        "alongamento de amêndoa",
+
+    "alongamento de amêndoa":
+        "alongamento de amêndoa",
 
     "alongamento stiletto":
         "alongamento stiletto",
 
-    "blindagem + esmaltação em gel":
+    "blindagem com decoração":
+        "blindagem com decoração",
+
+    "blindagem com esmaltação em gel":
         "blindagem com esmaltação em gel",
 
-    "blindagem com decoração":
+    "blindagem + esmaltação em gel":
         "blindagem com esmaltação em gel",
 
     "esmaltação em gel lisa":
         "esmaltação em gel",
 
+    "esmaltação em gel":
+        "esmaltação em gel",
+
     "manutenção de esmaltação em gel":
         "manutenção com esmaltação em gel",
 
+    "manutenção com esmaltação em gel":
+        "manutenção com esmaltação em gel",
+
     "remoção":
-        "remoção de gel ou alongamento",
+        "remoção de gel ou alongamentos",
+
+    "remoção de gel ou alongamento":
+        "remoção de gel ou alongamentos",
+
+    "remoção de gel ou alongamentos":
+        "remoção de gel ou alongamentos",
+
+
+    /* =========================
+       SOBRANCELHAS
+    ========================== */
 
     "design de sobrancelhas sem henna":
         "personalizado sem rena",
 
     "design de sobrancelhas com henna":
         "design com rena",
+
+    "personalizado sem rena":
+        "personalizado sem rena",
+
+    "personalizado sem henna":
+        "personalizado sem rena",
+
+    "design com rena":
+        "design com rena",
+
+    "design com henna":
+        "design com rena",
+
+
+    /* =========================
+       DEPILAÇÃO
+    ========================== */
 
     "depilação axila":
         "axila",
@@ -123,6 +212,17 @@ const aliasesProcedimentos = {
     "depilação virilha total":
         "virilha total",
 
+    "virilha comum":
+        "virilha comum",
+
+    "virilha total":
+        "virilha total",
+
+
+    /* =========================
+       OUTROS
+    ========================== */
+
     "spa dos pés":
         "spa dos pés",
 
@@ -139,30 +239,155 @@ const aliasesProcedimentos = {
 
 
 /* =====================================================
+   CRIAR VARIAÇÕES DE UM PROCEDIMENTO
+===================================================== */
+
+function obterNomesEquivalentes(nome) {
+
+    const nomes = new Set();
+
+    const original =
+        normalizarTexto(nome);
+
+    if (!original) {
+        return [];
+    }
+
+    nomes.add(original);
+
+
+    /* Alias direto */
+
+    if (aliasesProcedimentos[original]) {
+
+        nomes.add(
+            normalizarTexto(
+                aliasesProcedimentos[original]
+            )
+        );
+
+    }
+
+
+    /* Procura aliases que apontam para o nome */
+
+    Object.entries(
+        aliasesProcedimentos
+    ).forEach(([alias, destino]) => {
+
+        const destinoNormalizado =
+            normalizarTexto(destino);
+
+        if (
+            destinoNormalizado === original
+        ) {
+
+            nomes.add(
+                normalizarTexto(alias)
+            );
+
+        }
+
+    });
+
+
+    return [
+        ...nomes
+    ];
+
+}
+
+
+/* =====================================================
+   PEGAR NOME DO PROCEDIMENTO DO BANCO
+===================================================== */
+
+function obterNomeProcedimento(procedimento) {
+
+    if (!procedimento) {
+        return "";
+    }
+
+    return (
+        procedimento.nome ||
+        procedimento.name ||
+        ""
+    );
+
+}
+
+
+/* =====================================================
+   PEGAR PREÇO DO PROCEDIMENTO
+===================================================== */
+
+function obterPrecoProcedimento(procedimento) {
+
+    if (!procedimento) {
+        return 0;
+    }
+
+    return (
+        procedimento.preco ??
+        procedimento.preco_base ??
+        procedimento.valor ??
+        procedimento.price ??
+        0
+    );
+
+}
+
+
+/* =====================================================
    ENCONTRAR PROCEDIMENTO NO SUPABASE
 ===================================================== */
 
 function encontrarProcedimento(nomeHTML) {
 
-    if (!nomeHTML || !procedimentosBanco.length) {
+    if (
+        !nomeHTML ||
+        !procedimentosBanco.length
+    ) {
         return null;
     }
 
-    const nomeNormalizado = normalizarTexto(nomeHTML);
+
+    const nomeNormalizado =
+        normalizarTexto(nomeHTML);
+
+
+    /* ---------------------------------------------
+       NOMES EQUIVALENTES
+    --------------------------------------------- */
+
+    const nomesEquivalentes =
+        obterNomesEquivalentes(nomeHTML);
 
 
     /* ---------------------------------------------
        1. BUSCA EXATA
     --------------------------------------------- */
 
-    let procedimento = procedimentosBanco.find(item => {
+    let procedimento =
+        procedimentosBanco.find(item => {
 
-        return (
-            normalizarTexto(item.nome) === nomeNormalizado ||
-            normalizarTexto(item.name) === nomeNormalizado
-        );
+            const nomeBanco =
+                normalizarTexto(
+                    item.nome
+                );
 
-    });
+            const nameBanco =
+                normalizarTexto(
+                    item.name
+                );
+
+            return (
+                nomesEquivalentes.includes(nomeBanco) ||
+                nomesEquivalentes.includes(nameBanco)
+            );
+
+        });
+
 
     if (procedimento) {
         return procedimento;
@@ -170,21 +395,39 @@ function encontrarProcedimento(nomeHTML) {
 
 
     /* ---------------------------------------------
-       2. BUSCA POR ALIAS
+       2. BUSCA PELO ALIAS DIRETO
     --------------------------------------------- */
 
-    const alias = aliasesProcedimentos[nomeNormalizado];
+    const alias =
+        aliasesProcedimentos[nomeNormalizado];
+
 
     if (alias) {
 
-        procedimento = procedimentosBanco.find(item => {
+        const aliasNormalizado =
+            normalizarTexto(alias);
 
-            return (
-                normalizarTexto(item.nome) === alias ||
-                normalizarTexto(item.name) === alias
-            );
 
-        });
+        procedimento =
+            procedimentosBanco.find(item => {
+
+                const nomeBanco =
+                    normalizarTexto(
+                        item.nome
+                    );
+
+                const nameBanco =
+                    normalizarTexto(
+                        item.name
+                    );
+
+                return (
+                    nomeBanco === aliasNormalizado ||
+                    nameBanco === aliasNormalizado
+                );
+
+            });
+
 
         if (procedimento) {
             return procedimento;
@@ -197,19 +440,42 @@ function encontrarProcedimento(nomeHTML) {
        3. BUSCA POR TEXTO CONTIDO
     --------------------------------------------- */
 
-    const candidatos = procedimentosBanco.filter(item => {
+    const candidatos =
+        procedimentosBanco.filter(item => {
 
-        const nomeBanco = normalizarTexto(item.nome);
-        const nameBanco = normalizarTexto(item.name);
+            const nomeBanco =
+                normalizarTexto(
+                    item.nome
+                );
 
-        return (
-            nomeBanco.includes(nomeNormalizado) ||
-            nomeNormalizado.includes(nomeBanco) ||
-            nameBanco.includes(nomeNormalizado) ||
-            nomeNormalizado.includes(nameBanco)
-        );
+            const nameBanco =
+                normalizarTexto(
+                    item.name
+                );
 
-    });
+
+            return nomesEquivalentes.some(nome => {
+
+                return (
+                    (
+                        nomeBanco &&
+                        (
+                            nomeBanco.includes(nome) ||
+                            nome.includes(nomeBanco)
+                        )
+                    ) ||
+                    (
+                        nameBanco &&
+                        (
+                            nameBanco.includes(nome) ||
+                            nome.includes(nameBanco)
+                        )
+                    )
+                );
+
+            });
+
+        });
 
 
     if (candidatos.length === 1) {
@@ -239,10 +505,14 @@ async function carregarProcedimentos() {
 
     try {
 
-        const { data, error } = await supabaseClient
+        const {
+            data,
+            error
+        } = await supabaseClient
             .from("procedimento")
             .select("*")
             .eq("ativo", true);
+
 
         if (error) {
 
@@ -254,11 +524,20 @@ async function carregarProcedimentos() {
             return;
         }
 
-        procedimentosBanco = data || [];
+
+        procedimentosBanco =
+            data || [];
+
 
         console.log(
             "Procedimentos carregados:",
             procedimentosBanco.length
+        );
+
+
+        console.log(
+            "Dados dos procedimentos:",
+            procedimentosBanco
         );
 
 
@@ -267,6 +546,7 @@ async function carregarProcedimentos() {
         atualizarFotos();
 
         ativarBotoesServicos();
+
 
     } catch (erro) {
 
@@ -286,60 +566,85 @@ async function carregarProcedimentos() {
 
 function atualizarPrecos() {
 
-    document.querySelectorAll(".add-service").forEach(button => {
+    document
+        .querySelectorAll(
+            ".add-service"
+        )
+        .forEach(button => {
 
-        const nomeHTML =
-            button.dataset.service;
-
-        if (!nomeHTML) return;
-
-        const procedimento =
-            encontrarProcedimento(nomeHTML);
-
-        if (!procedimento) return;
+            const nomeHTML =
+                button.dataset.service;
 
 
-        const preco =
-            procedimento.preco ??
-            procedimento.preco_base ??
-            procedimento.valor ??
-            procedimento.price;
-
-
-        if (
-            preco === null ||
-            preco === undefined ||
-            preco === ""
-        ) {
-            return;
-        }
-
-
-        const card =
-            button.closest(
-                ".price-card, .simple-card, .service-card, .gallery-card, article, .card"
-            );
-
-        if (!card) return;
-
-
-        const elementosPreco =
-            card.querySelectorAll(
-                ".price, .spa-price, strong"
-            );
-
-        elementosPreco.forEach(elemento => {
-
-            if (elemento.closest("button")) {
+            if (!nomeHTML) {
                 return;
             }
 
-            elemento.textContent =
-                formatarPreco(preco);
+
+            const procedimento =
+                encontrarProcedimento(
+                    nomeHTML
+                );
+
+
+            if (!procedimento) {
+                return;
+            }
+
+
+            const preco =
+                obterPrecoProcedimento(
+                    procedimento
+                );
+
+
+            if (
+                preco === null ||
+                preco === undefined ||
+                preco === ""
+            ) {
+                return;
+            }
+
+
+            const card =
+                button.closest(
+                    ".price-card, .simple-card, .service-card, .gallery-card, article, .card"
+                );
+
+
+            if (!card) {
+                return;
+            }
+
+
+            const elementosPreco =
+                card.querySelectorAll(
+                    ".price, .spa-price, strong"
+                );
+
+
+            elementosPreco.forEach(
+                elemento => {
+
+                    if (
+                        elemento.closest(
+                            "button"
+                        )
+                    ) {
+                        return;
+                    }
+
+
+                    elemento.textContent =
+                        formatarPreco(
+                            preco
+                        );
+
+                }
+            );
 
         });
-
-    });
 
 }
 
@@ -350,119 +655,169 @@ function atualizarPrecos() {
 
 function atualizarFotos() {
 
-    if (!procedimentosBanco.length) {
+    if (
+        !procedimentosBanco.length
+    ) {
         return;
     }
 
 
-    document.querySelectorAll("img").forEach(img => {
+    document
+        .querySelectorAll("img")
+        .forEach(img => {
 
-        const alt =
-            img.alt || "";
-
-        if (!alt) return;
-
-
-        let procedimento =
-            encontrarProcedimento(alt);
+            const alt =
+                img.alt || "";
 
 
-        /*
-           Alguns ALT do HTML podem ser diferentes
-           do nome do procedimento.
-        */
+            if (!alt) {
+                return;
+            }
 
-        if (!procedimento) {
 
-            const altNormalizado =
-                normalizarTexto(alt);
+            let procedimento =
+                encontrarProcedimento(
+                    alt
+                );
+
+
+            /*
+               Alguns ALT do HTML podem ser diferentes
+               do nome do procedimento.
+            */
+
+            if (!procedimento) {
+
+                const altNormalizado =
+                    normalizarTexto(
+                        alt
+                    );
+
+
+                if (
+                    altNormalizado.includes(
+                        "volume light"
+                    ) ||
+                    altNormalizado.includes(
+                        "cilios light"
+                    )
+                ) {
+
+                    procedimento =
+                        encontrarProcedimento(
+                            "Luz de Volume"
+                        );
+
+                }
+
+
+                else if (
+                    altNormalizado.includes(
+                        "volume brasileiro"
+                    )
+                ) {
+
+                    procedimento =
+                        encontrarProcedimento(
+                            "Volume Brasileiro"
+                        );
+
+                }
+
+
+                else if (
+                    altNormalizado.includes(
+                        "volume egipcio"
+                    ) ||
+                    altNormalizado.includes(
+                        "cilios egipcio"
+                    )
+                ) {
+
+                    procedimento =
+                        encontrarProcedimento(
+                            "Volume Egípcio"
+                        );
+
+                }
+
+
+                else if (
+                    altNormalizado.includes(
+                        "quadrad"
+                    )
+                ) {
+
+                    procedimento =
+                        encontrarProcedimento(
+                            "Alongamento quadrado"
+                        );
+
+                }
+
+
+                else if (
+                    altNormalizado.includes(
+                        "almond"
+                    ) ||
+                    altNormalizado.includes(
+                        "amendoa"
+                    )
+                ) {
+
+                    procedimento =
+                        encontrarProcedimento(
+                            "Alongamento de amêndoa"
+                        );
+
+                }
+
+
+                else if (
+                    altNormalizado.includes(
+                        "stiletto"
+                    )
+                ) {
+
+                    procedimento =
+                        encontrarProcedimento(
+                            "Alongamento stiletto"
+                        );
+
+                }
+
+            }
 
 
             if (
-                altNormalizado.includes("volume light") ||
-                altNormalizado.includes("cilios light")
+                !procedimento ||
+                !procedimento.foto
+            ) {
+                return;
+            }
+
+
+            const {
+                data
+            } = supabaseClient
+                .storage
+                .from("procedimento")
+                .getPublicUrl(
+                    procedimento.foto
+                );
+
+
+            if (
+                data &&
+                data.publicUrl
             ) {
 
-                procedimento =
-                    encontrarProcedimento("Volume Light");
+                img.src =
+                    data.publicUrl;
 
             }
 
-            else if (
-                altNormalizado.includes("volume brasileiro")
-            ) {
-
-                procedimento =
-                    encontrarProcedimento("Volume Brasileiro");
-
-            }
-
-            else if (
-                altNormalizado.includes("volume egipcio") ||
-                altNormalizado.includes("cilios egipcio")
-            ) {
-
-                procedimento =
-                    encontrarProcedimento("Volume Egípcio");
-
-            }
-
-            else if (
-                altNormalizado.includes("quadrad")
-            ) {
-
-                procedimento =
-                    encontrarProcedimento("Alongamento quadrado");
-
-            }
-
-            else if (
-                altNormalizado.includes("almond")
-            ) {
-
-                procedimento =
-                    encontrarProcedimento("Alongamento almond");
-
-            }
-
-            else if (
-                altNormalizado.includes("stiletto")
-            ) {
-
-                procedimento =
-                    encontrarProcedimento("Alongamento stiletto");
-
-            }
-
-        }
-
-
-        if (
-            !procedimento ||
-            !procedimento.foto
-        ) {
-            return;
-        }
-
-
-        const {
-            data
-        } = supabaseClient
-            .storage
-            .from("procedimento")
-            .getPublicUrl(procedimento.foto);
-
-
-        if (
-            data &&
-            data.publicUrl
-        ) {
-
-            img.src = data.publicUrl;
-
-        }
-
-    });
+        });
 
 
     /*
@@ -474,12 +829,14 @@ function atualizarFotos() {
             "#spa .spa-image img"
         );
 
+
     if (spaImagem) {
 
         const procedimento =
             encontrarProcedimento(
                 "Spa dos pés"
             );
+
 
         if (
             procedimento &&
@@ -491,7 +848,10 @@ function atualizarFotos() {
             } = supabaseClient
                 .storage
                 .from("procedimento")
-                .getPublicUrl(procedimento.foto);
+                .getPublicUrl(
+                    procedimento.foto
+                );
+
 
             if (
                 data &&
@@ -517,17 +877,21 @@ function atualizarFotos() {
 function ativarBotoesServicos() {
 
     document
-        .querySelectorAll(".add-service")
+        .querySelectorAll(
+            ".add-service"
+        )
         .forEach(button => {
 
             if (
-                button.dataset.eventoAtivo === "true"
+                button.dataset.eventoAtivo ===
+                "true"
             ) {
                 return;
             }
 
 
-            button.dataset.eventoAtivo = "true";
+            button.dataset.eventoAtivo =
+                "true";
 
 
             button.addEventListener(
@@ -542,6 +906,7 @@ function ativarBotoesServicos() {
                     const nome =
                         this.dataset.service;
 
+
                     if (!nome) {
 
                         console.warn(
@@ -554,7 +919,9 @@ function ativarBotoesServicos() {
 
 
                     const procedimento =
-                        encontrarProcedimento(nome);
+                        encontrarProcedimento(
+                            nome
+                        );
 
 
                     if (!procedimento) {
@@ -591,16 +958,15 @@ function adicionarAoCarrinho(
 ) {
 
     const nome =
-        procedimento.nome ||
-        procedimento.name;
+        obterNomeProcedimento(
+            procedimento
+        );
 
 
     const preco =
-        procedimento.preco ??
-        procedimento.preco_base ??
-        procedimento.valor ??
-        procedimento.price ??
-        0;
+        obterPrecoProcedimento(
+            procedimento
+        );
 
 
     /*
@@ -620,14 +986,21 @@ function adicionarAoCarrinho(
         try {
 
             const dadosManutencao =
-                JSON.parse(manutencao);
+                JSON.parse(
+                    manutencao
+                );
+
 
             /*
                Se for uma lista de opções,
                não mostrar a lista inteira.
             */
 
-            if (Array.isArray(dadosManutencao)) {
+            if (
+                Array.isArray(
+                    dadosManutencao
+                )
+            ) {
 
                 manutencao = "";
 
@@ -649,8 +1022,10 @@ function adicionarAoCarrinho(
         cart.find(item => {
 
             return (
-                item.id === procedimento.id &&
-                item.maintenance === manutencao
+                item.id ===
+                    procedimento.id &&
+                item.maintenance ===
+                    manutencao
             );
 
         });
@@ -664,15 +1039,20 @@ function adicionarAoCarrinho(
 
         cart.push({
 
-            id: procedimento.id,
+            id:
+                procedimento.id,
 
-            nome: nome,
+            nome:
+                nome,
 
-            preco: Number(preco) || 0,
+            preco:
+                Number(preco) || 0,
 
-            maintenance: manutencao,
+            maintenance:
+                manutencao,
 
-            quantidade: 1
+            quantidade:
+                1
 
         });
 
@@ -690,8 +1070,10 @@ function adicionarAoCarrinho(
             button.dataset.textoOriginal ||
             button.textContent;
 
+
         button.dataset.textoOriginal =
             textoOriginal;
+
 
         button.textContent =
             "Adicionado ✓";
@@ -720,15 +1102,18 @@ function renderCart() {
             "cart-items"
         );
 
+
     const cartTotal =
         document.getElementById(
             "cart-total"
         );
 
+
     const cartCount =
         document.getElementById(
             "cart-count"
         );
+
 
     const cartEmpty =
         document.getElementById(
@@ -738,69 +1123,79 @@ function renderCart() {
 
     if (cartItems) {
 
-        cartItems.innerHTML = "";
+        cartItems.innerHTML =
+            "";
 
 
-        cart.forEach((item, index) => {
+        cart.forEach(
+            (item, index) => {
 
-            const div =
-                document.createElement("div");
-
-            div.className =
-                "cart-item";
-
-
-            const subtotal =
-                item.preco *
-                item.quantidade;
+                const div =
+                    document.createElement(
+                        "div"
+                    );
 
 
-            div.innerHTML = `
+                div.className =
+                    "cart-item";
 
-                <div class="cart-item-top">
 
-                    <div>
+                const subtotal =
+                    item.preco *
+                    item.quantidade;
 
-                        <h4>
-                            ${item.nome}
-                        </h4>
 
-                        ${
-                            item.maintenance
-                                ? `
-                                    <small>
-                                        ${item.maintenance}
-                                    </small>
-                                  `
-                                : ""
-                        }
+                div.innerHTML = `
+
+                    <div class="cart-item-top">
+
+                        <div>
+
+                            <h4>
+                                ${item.nome}
+                            </h4>
+
+                            ${
+                                item.maintenance
+                                    ? `
+                                        <small>
+                                            ${item.maintenance}
+                                        </small>
+                                      `
+                                    : ""
+                            }
+
+                        </div>
+
+                        <span class="cart-item-price">
+                            ${formatarPreco(subtotal)}
+                        </span>
 
                     </div>
 
-                    <span class="cart-item-price">
-                        ${formatarPreco(subtotal)}
-                    </span>
+                    <button
+                        type="button"
+                        class="cart-item-remove"
+                        data-index="${index}"
+                    >
+                        Remover
+                    </button>
 
-                </div>
-
-                <button
-                    type="button"
-                    class="cart-item-remove"
-                    data-index="${index}"
-                >
-                    Remover
-                </button>
-
-            `;
+                `;
 
 
-            cartItems.appendChild(div);
+                cartItems.appendChild(
+                    div
+                );
 
-        });
+            }
+        );
 
 
         cartItems
-            .querySelectorAll(".cart-item-remove")
+            .querySelectorAll(
+                ".cart-item-remove"
+            )
             .forEach(button => {
 
                 button.addEventListener(
@@ -812,10 +1207,12 @@ function renderCart() {
                                 this.dataset.index
                             );
 
+
                         cart.splice(
                             index,
                             1
                         );
+
 
                         renderCart();
 
@@ -829,7 +1226,10 @@ function renderCart() {
 
     const total =
         cart.reduce(
-            (soma, item) =>
+            (
+                soma,
+                item
+            ) =>
                 soma +
                 (
                     item.preco *
@@ -841,7 +1241,10 @@ function renderCart() {
 
     const quantidade =
         cart.reduce(
-            (soma, item) =>
+            (
+                soma,
+                item
+            ) =>
                 soma +
                 item.quantidade,
             0
@@ -851,7 +1254,9 @@ function renderCart() {
     if (cartTotal) {
 
         cartTotal.textContent =
-            formatarPreco(total);
+            formatarPreco(
+                total
+            );
 
     }
 
@@ -909,15 +1314,18 @@ const cartButton =
         "cart-button"
     );
 
+
 const cartDrawer =
     document.getElementById(
         "cart-drawer"
     );
 
+
 const cartOverlay =
     document.getElementById(
         "cart-overlay"
     );
+
 
 const cartClose =
     document.getElementById(
@@ -1018,7 +1426,9 @@ if (cartButton) {
 ===================================================== */
 
 document
-    .querySelectorAll(".open-cart")
+    .querySelectorAll(
+        ".open-cart"
+    )
     .forEach(button => {
 
         button.addEventListener(
@@ -1060,7 +1470,9 @@ if (cartOverlay) {
 
 
 document
-    .querySelectorAll(".close-cart")
+    .querySelectorAll(
+        ".close-cart"
+    )
     .forEach(button => {
 
         button.addEventListener(
@@ -1076,7 +1488,8 @@ document.addEventListener(
     function(event) {
 
         if (
-            event.key === "Escape"
+            event.key ===
+            "Escape"
         ) {
 
             fecharAgendamento();
@@ -1092,7 +1505,9 @@ document.addEventListener(
 ===================================================== */
 
 document
-    .querySelectorAll("[data-maintenance]")
+    .querySelectorAll(
+        "[data-maintenance]"
+    )
     .forEach(element => {
 
         element.addEventListener(
@@ -1261,13 +1676,17 @@ function enviarAgendamentoWhatsApp() {
 
     mensagem +=
         "*Cliente:* " +
-        encodeURIComponent(nome) +
+        encodeURIComponent(
+            nome
+        ) +
         "%0A";
 
 
     mensagem +=
         "*Telefone:* " +
-        encodeURIComponent(telefone) +
+        encodeURIComponent(
+            telefone
+        ) +
         "%0A";
 
 
@@ -1275,7 +1694,9 @@ function enviarAgendamentoWhatsApp() {
 
         mensagem +=
             "*Profissional:* " +
-            encodeURIComponent(profissional) +
+            encodeURIComponent(
+                profissional
+            ) +
             "%0A";
 
     }
@@ -1283,19 +1704,25 @@ function enviarAgendamentoWhatsApp() {
 
     mensagem +=
         "*Data:* " +
-        encodeURIComponent(data) +
+        encodeURIComponent(
+            data
+        ) +
         "%0A";
 
 
     mensagem +=
         "*Horário:* " +
-        encodeURIComponent(horario) +
+        encodeURIComponent(
+            horario
+        ) +
         "%0A";
 
 
     mensagem +=
         "*Pagamento:* " +
-        encodeURIComponent(pagamento) +
+        encodeURIComponent(
+            pagamento
+        ) +
         "%0A%0A";
 
 
@@ -1303,42 +1730,49 @@ function enviarAgendamentoWhatsApp() {
         "*Procedimentos:*%0A";
 
 
-    cart.forEach(item => {
-
-        mensagem +=
-            "- " +
-            encodeURIComponent(
-                item.nome
-            ) +
-            " x" +
-            item.quantidade +
-            " - " +
-            encodeURIComponent(
-                formatarPreco(
-                    item.preco *
-                    item.quantidade
-                )
-            ) +
-            "%0A";
-
-
-        if (item.maintenance) {
+    cart.forEach(
+        item => {
 
             mensagem +=
-                "  Manutenção: " +
+                "- " +
                 encodeURIComponent(
-                    item.maintenance
+                    item.nome
+                ) +
+                " x" +
+                item.quantidade +
+                " - " +
+                encodeURIComponent(
+                    formatarPreco(
+                        item.preco *
+                        item.quantidade
+                    )
                 ) +
                 "%0A";
 
-        }
 
-    });
+            if (
+                item.maintenance
+            ) {
+
+                mensagem +=
+                    "  Manutenção: " +
+                    encodeURIComponent(
+                        item.maintenance
+                    ) +
+                    "%0A";
+
+            }
+
+        }
+    );
 
 
     const total =
         cart.reduce(
-            (soma, item) =>
+            (
+                soma,
+                item
+            ) =>
                 soma +
                 (
                     item.preco *
@@ -1351,7 +1785,9 @@ function enviarAgendamentoWhatsApp() {
     mensagem +=
         "%0A*Total:* " +
         encodeURIComponent(
-            formatarPreco(total)
+            formatarPreco(
+                total
+            )
         );
 
 
@@ -1412,6 +1848,7 @@ const menuButton =
         "menu-button"
     );
 
+
 const nav =
     document.getElementById(
         "nav"
@@ -1430,6 +1867,7 @@ if (
             nav.classList.toggle(
                 "active"
             );
+
 
             menuButton.classList.toggle(
                 "active"
@@ -1450,6 +1888,7 @@ if (
                     nav.classList.remove(
                         "active"
                     );
+
 
                     menuButton.classList.remove(
                         "active"
