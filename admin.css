@@ -1,19 +1,15 @@
 /* =====================================================
-   PAINEL ADMINISTRATIVO
-   STUDIO DE BELEZA NAIARA BRAGA
-===================================================== */
-
-
-/* =====================================================
    VARIÁVEIS
 ===================================================== */
 
 :root {
 
     --fundo: #202124;
+
     --fundo-escuro: #18191b;
 
     --card: #292a2d;
+
     --card-hover: #2e2f32;
 
     --campo: #202124;
@@ -21,12 +17,15 @@
     --borda: #3a3b3e;
 
     --dourado: #c8b083;
+
     --dourado-claro: #d8c59e;
 
     --texto: #f3f1ec;
+
     --texto-suave: #aaa8a3;
 
     --verde: #79b892;
+
     --vermelho: #c97878;
 
 }
@@ -37,11 +36,19 @@
 ===================================================== */
 
 * {
+
     margin: 0;
+
     padding: 0;
+
     box-sizing: border-box;
+
 }
 
+
+/* =====================================================
+   BODY
+===================================================== */
 
 body {
 
@@ -49,15 +56,18 @@ body {
 
     background:
         radial-gradient(
-            circle at top right,
-            rgba(200, 176, 131, 0.06),
-            transparent 35%
-        ),
-        var(--fundo);
+            circle at top,
+            #292a2d 0%,
+            #202124 45%,
+            #18191b 100%
+        );
 
     color: var(--texto);
 
-    font-family: "Montserrat", sans-serif;
+    font-family:
+        "Montserrat",
+        Arial,
+        sans-serif;
 
 }
 
@@ -69,11 +79,15 @@ body {
 .painel {
 
     width: 100%;
+
     max-width: 1400px;
 
     margin: 0 auto;
 
-    padding: 40px 50px 70px;
+    padding:
+        40px
+        50px
+        70px;
 
 }
 
@@ -90,9 +104,23 @@ body {
 
     justify-content: space-between;
 
+    gap: 30px;
+
     padding-bottom: 35px;
 
-    border-bottom: 1px solid var(--borda);
+    border-bottom:
+        1px solid var(--borda);
+
+}
+
+
+/* =====================================================
+   INFORMAÇÕES DO TOPO
+===================================================== */
+
+.informacoes-topo {
+
+    min-width: 0;
 
 }
 
@@ -101,9 +129,10 @@ body {
 
     display: block;
 
-    margin-bottom: 5px;
+    margin-bottom: 7px;
 
-    color: var(--dourado);
+    color:
+        var(--dourado);
 
     font-size: 11px;
 
@@ -116,11 +145,15 @@ body {
 
 .topo h1 {
 
+    color:
+        var(--dourado-claro);
+
     font-family:
         "Cormorant Garamond",
+        Georgia,
         serif;
 
-    font-size: 48px;
+    font-size: 46px;
 
     font-weight: 600;
 
@@ -131,13 +164,112 @@ body {
 
 .topo p {
 
-    margin-top: 8px;
+    margin-top: 10px;
 
-    color: var(--texto-suave);
+    color:
+        var(--texto-suave);
 
     font-size: 13px;
 
-    letter-spacing: 0.5px;
+}
+
+
+/* =====================================================
+   AÇÕES DO TOPO
+===================================================== */
+
+.acoes-topo {
+
+    display: flex !important;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+
+}
+
+
+/* =====================================================
+   BOTÃO VOLTAR PARA O SITE
+===================================================== */
+
+.btn-voltar-site {
+
+    display: inline-flex !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 42px;
+
+    padding:
+        11px
+        18px;
+
+    border:
+        1px solid var(--dourado) !important;
+
+    border-radius: 3px;
+
+    background:
+        transparent !important;
+
+    color:
+        var(--dourado) !important;
+
+    font-family:
+        "Montserrat",
+        Arial,
+        sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.2;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.2s ease;
+
+}
+
+
+.btn-voltar-site:hover {
+
+    background:
+        var(--dourado) !important;
+
+    color:
+        #18191b !important;
+
+}
+
+
+.btn-voltar-site:active {
+
+    transform:
+        scale(0.98);
 
 }
 
@@ -148,32 +280,53 @@ body {
 
 .btn-sair {
 
-    padding: 11px 22px;
+    display: inline-flex;
 
-    border: 1px solid var(--borda);
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 42px;
+
+    padding:
+        11px
+        18px;
+
+    border:
+        1px solid var(--vermelho);
 
     border-radius: 3px;
 
-    background: transparent;
+    background:
+        transparent;
 
-    color: var(--texto-suave);
+    color:
+        var(--vermelho);
 
-    font-family: "Montserrat", sans-serif;
+    font-family:
+        "Montserrat",
+        Arial,
+        sans-serif;
 
     font-size: 12px;
 
+    font-weight: 500;
+
     cursor: pointer;
 
-    transition: 0.3s;
+    transition:
+        0.3s ease;
 
 }
 
 
 .btn-sair:hover {
 
-    border-color: var(--dourado);
+    background:
+        var(--vermelho);
 
-    color: var(--dourado);
+    color:
+        #18191b;
 
 }
 
@@ -190,84 +343,75 @@ body {
 
     justify-content: space-between;
 
-    gap: 30px;
+    gap: 20px;
 
-    margin: 45px 0 30px;
+    margin-top: 45px;
 
-}
-
-
-.titulo-secao > div > span {
-
-    color: var(--dourado);
-
-    font-size: 10px;
-
-    font-weight: 600;
-
-    letter-spacing: 3px;
+    margin-bottom: 25px;
 
 }
 
 
 .titulo-secao h2 {
 
-    margin-top: 5px;
+    color:
+        var(--texto);
 
     font-family:
         "Cormorant Garamond",
+        Georgia,
         serif;
 
-    font-size: 38px;
+    font-size: 36px;
 
     font-weight: 600;
 
 }
 
 
-.titulo-secao p {
-
-    margin-top: 5px;
-
-    color: var(--texto-suave);
-
-    font-size: 13px;
-
-}
-
-
 /* =====================================================
-   BOTÃO ATUALIZAR
+   BOTÃO RECARREGAR
 ===================================================== */
 
 .btn-recarregar {
 
-    padding: 12px 20px;
+    padding:
+        10px
+        16px;
 
-    border: 1px solid var(--borda);
+    border:
+        1px solid var(--borda);
 
     border-radius: 3px;
 
-    background: var(--card);
+    background:
+        var(--card);
 
-    color: var(--texto);
+    color:
+        var(--texto-suave);
 
-    font-family: "Montserrat", sans-serif;
+    font-family:
+        "Montserrat",
+        Arial,
+        sans-serif;
 
     font-size: 12px;
 
     cursor: pointer;
 
-    transition: 0.3s;
+    transition:
+        0.3s ease;
 
 }
 
 
 .btn-recarregar:hover {
 
-    border-color: var(--dourado);
+    border-color:
+        var(--dourado);
 
-    color: var(--dourado);
+    color:
+        var(--dourado);
 
 }
 
@@ -278,9 +422,16 @@ body {
 
 .mensagem {
 
-    min-height: 0;
-
     margin-bottom: 20px;
+
+    padding:
+        14px
+        18px;
+
+    border:
+        1px solid var(--borda);
+
+    border-radius: 4px;
 
     font-size: 13px;
 
@@ -289,20 +440,28 @@ body {
 
 .mensagem.sucesso {
 
-    color: var(--verde);
+    border-color:
+        var(--verde);
+
+    color:
+        var(--verde);
 
 }
 
 
 .mensagem.erro {
 
-    color: var(--vermelho);
+    border-color:
+        var(--vermelho);
+
+    color:
+        var(--vermelho);
 
 }
 
 
 /* =====================================================
-   LISTA
+   LISTA DE PROCEDIMENTOS
 ===================================================== */
 
 .lista-procedimentos {
@@ -310,9 +469,15 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(
+            auto-fit,
+            minmax(
+                320px,
+                1fr
+            )
+        );
 
-    gap: 18px;
+    gap: 20px;
 
 }
 
@@ -323,30 +488,44 @@ body {
 
 .procedimento-card {
 
-    padding: 25px;
+    background:
+        var(--card);
 
-    border: 1px solid var(--borda);
+    border:
+        1px solid var(--borda);
 
     border-radius: 5px;
 
-    background: var(--card);
+    padding: 25px;
 
     transition:
-        border-color 0.3s,
-        background 0.3s,
-        transform 0.3s;
+        0.3s ease;
 
 }
 
 
 .procedimento-card:hover {
 
-    border-color: #55565a;
+    border-color:
+        #55565a;
 
-    background: var(--card-hover);
+    background:
+        var(--card-hover);
 
 }
 
+
+.procedimento-card.editando {
+
+    border-color:
+        var(--dourado);
+
+}
+
+
+/* =====================================================
+   TOPO DO CARD
+===================================================== */
 
 .card-topo {
 
@@ -356,7 +535,7 @@ body {
 
     justify-content: space-between;
 
-    gap: 20px;
+    gap: 15px;
 
 }
 
@@ -365,9 +544,10 @@ body {
 
     display: block;
 
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 
-    color: var(--dourado);
+    color:
+        var(--dourado);
 
     font-size: 9px;
 
@@ -380,8 +560,12 @@ body {
 
 .card-info h3 {
 
+    color:
+        var(--texto);
+
     font-family:
         "Cormorant Garamond",
+        Georgia,
         serif;
 
     font-size: 25px;
@@ -401,9 +585,11 @@ body {
 
     flex-shrink: 0;
 
-    padding: 6px 10px;
+    padding:
+        6px
+        9px;
 
-    border-radius: 20px;
+    border-radius: 3px;
 
     font-size: 9px;
 
@@ -411,23 +597,39 @@ body {
 
     letter-spacing: 1px;
 
+    text-transform: uppercase;
+
 }
 
 
 .status.ativo {
 
-    background: rgba(121, 184, 146, 0.10);
+    background:
+        rgba(
+            121,
+            184,
+            146,
+            0.10
+        );
 
-    color: var(--verde);
+    color:
+        var(--verde);
 
 }
 
 
 .status.inativo {
 
-    background: rgba(201, 120, 120, 0.10);
+    background:
+        rgba(
+            201,
+            120,
+            120,
+            0.10
+        );
 
-    color: var(--vermelho);
+    color:
+        var(--vermelho);
 
 }
 
@@ -440,7 +642,8 @@ body {
 
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        1fr 1fr;
 
     gap: 15px;
 
@@ -448,31 +651,34 @@ body {
 
     padding-top: 20px;
 
-    border-top: 1px solid var(--borda);
+    border-top:
+        1px solid var(--borda);
 
 }
 
 
-.informacao span {
+.informacoes span {
 
     display: block;
 
     margin-bottom: 5px;
 
-    color: var(--texto-suave);
+    color:
+        var(--texto-suave);
 
     font-size: 9px;
 
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
 
 }
 
 
-.informacao strong {
+.informacoes strong {
 
-    color: var(--texto);
+    color:
+        var(--texto);
 
-    font-size: 15px;
+    font-size: 14px;
 
     font-weight: 500;
 
@@ -480,12 +686,12 @@ body {
 
 
 /* =====================================================
-   ÁREA EDITAR
+   ÁREA DE EDIÇÃO
 ===================================================== */
 
 .editar-area {
 
-    margin-top: 22px;
+    margin-top: 25px;
 
 }
 
@@ -494,73 +700,68 @@ body {
 
     width: 100%;
 
-    padding: 12px;
+    padding:
+        12px
+        15px;
 
-    border: 1px solid var(--borda);
+    border:
+        1px solid var(--dourado);
 
     border-radius: 3px;
 
-    background: transparent;
+    background:
+        transparent;
 
-    color: var(--dourado-claro);
+    color:
+        var(--dourado);
 
-    font-family: "Montserrat", sans-serif;
+    font-family:
+        "Montserrat",
+        Arial,
+        sans-serif;
 
     font-size: 11px;
 
     font-weight: 500;
 
-    letter-spacing: 0.5px;
-
     cursor: pointer;
 
-    transition: 0.3s;
+    transition:
+        0.3s ease;
 
 }
 
 
 .btn-editar:hover {
 
-    background: rgba(200, 176, 131, 0.06);
+    background:
+        var(--dourado);
 
-    border-color: var(--dourado);
+    color:
+        #18191b;
 
 }
 
 
 /* =====================================================
-   EDIÇÃO
+   TÍTULO DA EDIÇÃO
 ===================================================== */
 
-.procedimento-card.editando {
+.editar-titulo {
 
-    border-color: var(--dourado);
+    margin-bottom: 20px;
 
-}
-
-
-.editar-titulo span {
-
-    color: var(--dourado);
-
-    font-size: 9px;
-
-    font-weight: 600;
-
-    letter-spacing: 2px;
-
-}
-
-
-.editar-titulo h3 {
-
-    margin-top: 5px;
+    color:
+        var(--dourado-claro);
 
     font-family:
         "Cormorant Garamond",
+        Georgia,
         serif;
 
     font-size: 25px;
+
+    font-weight: 600;
 
 }
 
@@ -571,31 +772,38 @@ body {
 
 .form-edicao {
 
-    margin-top: 25px;
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 17px;
 
 }
 
 
 .campo {
 
-    margin-bottom: 18px;
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
 
 }
 
 
 .campo label {
 
-    display: block;
-
-    margin-bottom: 7px;
-
-    color: var(--texto-suave);
+    color:
+        var(--texto-suave);
 
     font-size: 10px;
 
     font-weight: 500;
 
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
 
 }
 
@@ -605,25 +813,31 @@ body {
 
     width: 100%;
 
-    height: 44px;
+    min-height: 42px;
 
-    padding: 0 13px;
+    padding:
+        10px
+        12px;
 
-    border: 1px solid var(--borda);
+    border:
+        1px solid var(--borda);
 
     border-radius: 3px;
 
     outline: none;
 
-    background: var(--campo);
+    background:
+        var(--campo);
 
-    color: var(--texto);
+    color:
+        var(--texto);
 
-    font-family: "Montserrat", sans-serif;
+    font-family:
+        "Montserrat",
+        Arial,
+        sans-serif;
 
-    font-size: 13px;
-
-    transition: 0.3s;
+    font-size: 12px;
 
 }
 
@@ -631,7 +845,8 @@ body {
 .campo input:focus,
 .campo select:focus {
 
-    border-color: var(--dourado);
+    border-color:
+        var(--dourado);
 
 }
 
@@ -644,7 +859,8 @@ body {
 
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        1fr 1fr;
 
     gap: 15px;
 
@@ -652,40 +868,42 @@ body {
 
 
 /* =====================================================
-   PREFIXOS
+   PREFIXO R$
 ===================================================== */
 
 .input-prefixo {
 
     display: flex;
 
-    align-items: center;
-
-    height: 44px;
-
-    border: 1px solid var(--borda);
-
-    border-radius: 3px;
-
-    background: var(--campo);
-
-    transition: 0.3s;
-
-}
-
-
-.input-prefixo:focus-within {
-
-    border-color: var(--dourado);
+    align-items: stretch;
 
 }
 
 
 .input-prefixo span {
 
-    padding: 0 12px;
+    display: flex;
 
-    color: var(--dourado);
+    align-items: center;
+
+    padding:
+        0
+        12px;
+
+    border:
+        1px solid var(--borda);
+
+    border-right:
+        none;
+
+    border-radius:
+        3px 0 0 3px;
+
+    background:
+        #252629;
+
+    color:
+        var(--dourado);
 
     font-size: 12px;
 
@@ -694,18 +912,8 @@ body {
 
 .input-prefixo input {
 
-    height: 42px;
-
-    border: none;
-
-    background: transparent;
-
-}
-
-
-.input-prefixo input:focus {
-
-    border: none;
+    border-radius:
+        0 3px 3px 0;
 
 }
 
@@ -716,25 +924,27 @@ body {
 
 .botoes-edicao {
 
-    display: grid;
-
-    grid-template-columns: 1fr 1.5fr;
+    display: flex;
 
     gap: 10px;
 
-    margin-top: 25px;
+    margin-top: 5px;
 
 }
 
 
-.btn-cancelar,
-.btn-salvar {
+.botoes-edicao button {
 
-    height: 44px;
+    flex: 1;
+
+    min-height: 42px;
 
     border-radius: 3px;
 
-    font-family: "Montserrat", sans-serif;
+    font-family:
+        "Montserrat",
+        Arial,
+        sans-serif;
 
     font-size: 11px;
 
@@ -742,45 +952,52 @@ body {
 
     cursor: pointer;
 
-    transition: 0.3s;
-
 }
 
 
 .btn-cancelar {
 
-    border: 1px solid var(--borda);
+    border:
+        1px solid var(--borda);
 
-    background: transparent;
+    background:
+        transparent;
 
-    color: var(--texto-suave);
+    color:
+        var(--texto-suave);
 
 }
 
 
 .btn-cancelar:hover {
 
-    border-color: #666;
+    border-color:
+        var(--texto-suave);
 
-    color: var(--texto);
+    color:
+        var(--texto);
 
 }
 
 
 .btn-salvar {
 
-    border: 1px solid var(--dourado);
+    border:
+        1px solid var(--dourado);
 
-    background: var(--dourado);
+    background:
+        var(--dourado);
 
-    color: #1b1b1b;
+    color:
+        #18191b;
 
 }
 
 
 .btn-salvar:hover {
 
-    background: var(--dourado-claro);
+    background:
+        var(--dourado-claro);
 
 }
 
@@ -789,30 +1006,30 @@ body {
 
     opacity: 0.5;
 
-    cursor: not-allowed;
+    cursor:
+        not-allowed;
 
 }
 
 
 /* =====================================================
-   CARREGANDO / ERRO / VAZIO
+   ESTADOS
 ===================================================== */
 
 .carregando,
 .erro,
 .vazio {
 
-    grid-column: 1 / -1;
+    grid-column:
+        1 / -1;
 
-    padding: 50px;
-
-    border: 1px solid var(--borda);
-
-    background: var(--card);
-
-    color: var(--texto-suave);
+    padding:
+        50px 20px;
 
     text-align: center;
+
+    color:
+        var(--texto-suave);
 
     font-size: 13px;
 
@@ -821,7 +1038,104 @@ body {
 
 .erro {
 
-    color: var(--vermelho);
+    color:
+        var(--vermelho);
+
+}
+
+
+/* =====================================================
+   FOTOS
+===================================================== */
+
+.foto-procedimento {
+
+    width: 100%;
+
+    height: 220px;
+
+    margin-bottom: 20px;
+
+    object-fit: cover;
+
+    border-radius: 4px;
+
+}
+
+
+.sem-foto {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 100%;
+
+    height: 160px;
+
+    margin-bottom: 20px;
+
+    border:
+        1px solid var(--borda);
+
+    border-radius: 4px;
+
+    color:
+        var(--texto-suave);
+
+    font-size: 11px;
+
+}
+
+
+.foto-edicao {
+
+    width: 100%;
+
+    max-height: 250px;
+
+    margin-top: 10px;
+
+    object-fit: cover;
+
+    border-radius: 4px;
+
+}
+
+
+.preview-foto {
+
+    width: 100%;
+
+    max-height: 220px;
+
+    margin-top: 8px;
+
+    object-fit: cover;
+
+    border-radius: 4px;
+
+}
+
+
+.input-foto {
+
+    padding:
+        9px !important;
+
+}
+
+
+.ajuda-foto {
+
+    color:
+        var(--texto-suave);
+
+    font-size: 10px;
+
+    line-height: 1.5;
 
 }
 
@@ -834,14 +1148,24 @@ body {
 
     .painel {
 
-        padding: 30px 25px 50px;
+        padding:
+            30px
+            25px
+            60px;
 
     }
 
 
-    .lista-procedimentos {
+    .topo {
 
-        grid-template-columns: 1fr;
+        align-items: flex-start;
+
+    }
+
+
+    .topo h1 {
+
+        font-size: 40px;
 
     }
 
@@ -852,16 +1176,21 @@ body {
 
     .painel {
 
-        padding: 25px 18px 40px;
+        padding:
+            25px
+            18px
+            50px;
 
     }
 
 
     .topo {
 
-        align-items: flex-start;
+        flex-direction: column;
 
-        gap: 20px;
+        align-items: stretch;
+
+        gap: 25px;
 
     }
 
@@ -873,13 +1202,32 @@ body {
     }
 
 
-    .titulo-secao {
+    .acoes-topo {
 
-        align-items: flex-start;
+        width: 100%;
 
         flex-direction: column;
 
-        gap: 20px;
+        align-items: stretch;
+
+        justify-content: stretch;
+
+    }
+
+
+    .btn-voltar-site,
+    .btn-sair {
+
+        width: 100%;
+
+    }
+
+
+    .titulo-secao {
+
+        align-items: stretch;
+
+        flex-direction: column;
 
     }
 
@@ -898,177 +1246,26 @@ body {
     }
 
 
+    .lista-procedimentos {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
     .linha-campos {
 
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
 
     }
 
 
     .botoes-edicao {
 
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .card-topo {
-
         flex-direction: column;
 
-    }
-
-
-    .status {
-
-        align-self: flex-start;
-
-    }
-
-}
-/* =====================================================
-   FOTOS DOS PROCEDIMENTOS
-===================================================== */
-
-.foto-procedimento {
-    width: 100%;
-    height: 220px;
-    margin: 20px 0;
-    border-radius: 14px;
-    overflow: hidden;
-    background: var(--fundo);
-    border: 1px solid var(--borda);
-}
-
-.foto-procedimento img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-}
-
-.sem-foto {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: var(--texto-suave);
-}
-
-.sem-foto span {
-    font-size: 34px;
-}
-
-.sem-foto p {
-    margin: 0;
-    font-size: 13px;
-}
-
-
-/* =====================================================
-   FOTO DURANTE A EDIÇÃO
-===================================================== */
-
-.foto-edicao {
-    margin-bottom: 24px;
-}
-
-.foto-edicao > label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--texto-suave);
-}
-
-.preview-foto {
-    width: 100%;
-    max-width: 360px;
-    height: 240px;
-    margin-bottom: 14px;
-    overflow: hidden;
-    border-radius: 14px;
-    background: var(--fundo);
-    border: 1px solid var(--borda);
-}
-
-.preview-foto img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-}
-
-
-/* =====================================================
-   CAMPO DE UPLOAD
-===================================================== */
-
-.input-foto {
-    width: 100%;
-    max-width: 360px;
-    padding: 10px;
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-    background: var(--campo);
-    color: var(--texto);
-    font-family: inherit;
-    font-size: 13px;
-    cursor: pointer;
-}
-
-.input-foto:hover {
-    border-color: var(--dourado);
-}
-
-.input-foto::file-selector-button {
-    margin-right: 12px;
-    padding: 8px 14px;
-    border: none;
-    border-radius: 6px;
-    background: var(--dourado);
-    color: #18191b;
-    font-family: inherit;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.input-foto::file-selector-button:hover {
-    background: var(--dourado-claro);
-}
-
-.ajuda-foto {
-    display: block;
-    max-width: 360px;
-    margin-top: 8px;
-    color: var(--texto-suave);
-    font-size: 11px;
-    line-height: 1.5;
-}
-
-
-/* =====================================================
-   RESPONSIVO
-===================================================== */
-
-@media (max-width: 600px) {
-
-    .foto-procedimento {
-        height: 200px;
-    }
-
-    .preview-foto {
-        max-width: 100%;
-        height: 220px;
-    }
-
-    .input-foto {
-        max-width: 100%;
     }
 
 }
