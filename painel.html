@@ -22,6 +22,7 @@
 </head>
 
 <body>
+    
 
     <main class="painel">
 
@@ -109,6 +110,74 @@
             </div>
 
 
+            <!-- =================================================
+                 FILTROS POR CATEGORIA
+            ================================================== -->
+            
+            <div class="filtros-categorias">
+
+                <button
+                    type="button"
+                    class="filtro-categoria ativo"
+                    data-categoria="todos">
+
+                    Todos
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filtro-categoria"
+                    data-categoria="cilios">
+
+                    Cílios
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filtro-categoria"
+                    data-categoria="unhas">
+
+                    Unhas
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filtro-categoria"
+                    data-categoria="sobrancelhas">
+
+                    Sobrancelhas
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filtro-categoria"
+                    data-categoria="depilacao">
+
+                    Depilação
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filtro-categoria"
+                    data-categoria="spa">
+
+                    Spa dos Pés
+
+                </button>
+
+            </div>
+
+
             <!-- MENSAGEM -->
 
             <div
@@ -189,6 +258,20 @@
 
 
         /* =====================================================
+           CATEGORIA ATUAL
+        ===================================================== */
+
+        let categoriaAtual = "todos";
+
+
+        /* =====================================================
+           DADOS DOS PROCEDIMENTOS
+        ===================================================== */
+
+        let procedimentosCarregados = [];
+
+
+        /* =====================================================
            NORMALIZAR TEXTO
         ===================================================== */
 
@@ -199,6 +282,128 @@
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "")
                 .trim();
+
+        }
+
+
+        /* =====================================================
+           IDENTIFICAR CATEGORIA
+        ===================================================== */
+
+        function identificarCategoria(nome) {
+
+            const nomeNormalizado =
+                normalizarTexto(nome);
+
+
+            /* =========================
+               CÍLIOS
+            ========================== */
+
+            if (
+
+                nomeNormalizado.includes("volume") ||
+
+                nomeNormalizado.includes("luz de volume") ||
+
+                nomeNormalizado.includes("cilios") ||
+
+                nomeNormalizado.includes("manutencao do volume")
+
+            ) {
+
+                return "cilios";
+
+            }
+
+
+            /* =========================
+               UNHAS
+            ========================== */
+
+            if (
+
+                nomeNormalizado.includes("alongamento") ||
+
+                nomeNormalizado.includes("blindagem") ||
+
+                nomeNormalizado.includes("esmalta") ||
+
+                nomeNormalizado.includes("manicure") ||
+
+                nomeNormalizado.includes("pedicure") ||
+
+                nomeNormalizado.includes("remocao de gel") ||
+
+                nomeNormalizado.includes("remocao de alongamento")
+
+            ) {
+
+                return "unhas";
+
+            }
+
+
+            /* =========================
+               SOBRANCELHAS
+            ========================== */
+
+            if (
+
+                nomeNormalizado.includes("sobrancelha") ||
+
+                nomeNormalizado.includes("design") ||
+
+                nomeNormalizado.includes("rena")
+
+            ) {
+
+                return "sobrancelhas";
+
+            }
+
+
+            /* =========================
+               DEPILAÇÃO
+            ========================== */
+
+            if (
+
+                nomeNormalizado.includes("axila") ||
+
+                nomeNormalizado.includes("antebraco") ||
+
+                nomeNormalizado.includes("buco") ||
+
+                nomeNormalizado.includes("perna") ||
+
+                nomeNormalizado.includes("meia perna") ||
+
+                nomeNormalizado.includes("virilha")
+
+            ) {
+
+                return "depilacao";
+
+            }
+
+
+            /* =========================
+               SPA DOS PÉS
+            ========================== */
+
+            if (
+
+                nomeNormalizado.includes("spa dos pes")
+
+            ) {
+
+                return "spa";
+
+            }
+
+
+            return "outros";
 
         }
 
@@ -377,18 +582,11 @@
                 }
 
 
-                lista.innerHTML = "";
+                procedimentosCarregados =
+                    data;
 
 
-                data.forEach(
-                    procedimento => {
-
-                        criarCardProcedimento(
-                            procedimento
-                        );
-
-                    }
-                );
+                renderizarProcedimentos();
 
 
             } catch (erro) {
@@ -415,6 +613,75 @@
 
 
         /* =====================================================
+           RENDERIZAR PROCEDIMENTOS
+        ===================================================== */
+
+        function renderizarProcedimentos() {
+
+            const lista =
+                document.getElementById(
+                    "lista-procedimentos"
+                );
+
+
+            lista.innerHTML = "";
+
+
+            const procedimentosFiltrados =
+                procedimentosCarregados.filter(
+                    procedimento => {
+
+                        if (
+                            categoriaAtual === "todos"
+                        ) {
+
+                            return true;
+
+                        }
+
+
+                        return identificarCategoria(
+                            procedimento.nome
+                        ) === categoriaAtual;
+
+                    }
+                );
+
+
+            if (
+                procedimentosFiltrados.length === 0
+            ) {
+
+                lista.innerHTML = `
+
+                    <div class="vazio">
+
+                        Nenhum procedimento encontrado
+                        nesta categoria.
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            procedimentosFiltrados.forEach(
+                procedimento => {
+
+                    criarCardProcedimento(
+                        procedimento
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
            CRIAR CARD
         ===================================================== */
 
@@ -430,6 +697,7 @@
 
             const card =
                 document.createElement("article");
+
 
             card.className =
                 "procedimento-card";
@@ -812,6 +1080,7 @@
                         "editando"
                     );
 
+
                     editarArea.innerHTML = `
 
                         <button
@@ -1122,6 +1391,52 @@
             }
 
         }
+
+
+        /* =====================================================
+           FILTROS DE CATEGORIA
+        ===================================================== */
+
+        const botoesCategoria =
+            document.querySelectorAll(
+                ".filtro-categoria"
+            );
+
+
+        botoesCategoria.forEach(
+            botao => {
+
+                botao.addEventListener(
+                    "click",
+                    () => {
+
+                        categoriaAtual =
+                            botao.dataset.categoria;
+
+
+                        botoesCategoria.forEach(
+                            outroBotao => {
+
+                                outroBotao.classList.remove(
+                                    "ativo"
+                                );
+
+                            }
+                        );
+
+
+                        botao.classList.add(
+                            "ativo"
+                        );
+
+
+                        renderizarProcedimentos();
+
+                    }
+                );
+
+            }
+        );
 
 
         /* =====================================================

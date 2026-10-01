@@ -5,27 +5,19 @@
 :root {
 
     --fundo: #202124;
-
     --fundo-escuro: #18191b;
-
     --card: #292a2d;
-
     --card-hover: #2e2f32;
-
     --campo: #202124;
-
     --borda: #3a3b3e;
 
     --dourado: #c8b083;
-
     --dourado-claro: #d8c59e;
 
     --texto: #f3f1ec;
-
     --texto-suave: #aaa8a3;
 
     --verde: #79b892;
-
     --vermelho: #c97878;
 
 }
@@ -38,9 +30,7 @@
 * {
 
     margin: 0;
-
     padding: 0;
-
     box-sizing: border-box;
 
 }
@@ -347,7 +337,7 @@ body {
 
     margin-top: 45px;
 
-    margin-bottom: 25px;
+    margin-bottom: 22px;
 
 }
 
@@ -412,6 +402,126 @@ body {
 
     color:
         var(--dourado);
+
+}
+
+
+/* =====================================================
+   FILTROS DE CATEGORIA
+===================================================== */
+
+.filtros-categorias {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 28px;
+
+    padding-bottom: 22px;
+
+    border-bottom:
+        1px solid var(--borda);
+
+}
+
+
+/* =====================================================
+   BOTÃO DE CATEGORIA
+===================================================== */
+
+.filtro-categoria {
+
+    min-height: 38px;
+
+    padding:
+        9px
+        17px;
+
+    border:
+        1px solid var(--borda);
+
+    border-radius: 3px;
+
+    background:
+        transparent;
+
+    color:
+        var(--texto-suave);
+
+    font-family:
+        "Montserrat",
+        Arial,
+        sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.3px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.2s ease;
+
+}
+
+
+.filtro-categoria:hover {
+
+    border-color:
+        var(--dourado);
+
+    color:
+        var(--dourado);
+
+}
+
+
+/* =====================================================
+   CATEGORIA ATIVA
+===================================================== */
+
+.filtro-categoria.ativo {
+
+    border-color:
+        var(--dourado);
+
+    background:
+        var(--dourado);
+
+    color:
+        #18191b;
+
+}
+
+
+.filtro-categoria.ativo:hover {
+
+    background:
+        var(--dourado-claro);
+
+    border-color:
+        var(--dourado-claro);
+
+    color:
+        #18191b;
+
+}
+
+
+.filtro-categoria:active {
+
+    transform:
+        scale(0.97);
 
 }
 
@@ -1246,6 +1356,34 @@ body {
     }
 
 
+    /* =========================
+       FILTROS NO CELULAR
+    ========================== */
+
+    .filtros-categorias {
+
+        gap: 7px;
+
+        margin-bottom: 24px;
+
+    }
+
+
+    .filtro-categoria {
+
+        flex: 1 1 auto;
+
+        min-width: 105px;
+
+        padding:
+            9px
+            12px;
+
+        font-size: 10px;
+
+    }
+
+
     .lista-procedimentos {
 
         grid-template-columns:
@@ -1268,4 +1406,49 @@ body {
 
     }
 
+}
+
+/* =====================================================
+   BOTÕES DE CATEGORIA
+===================================================== */
+
+.filtros-categorias {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    margin: 20px 0 30px !important;
+    padding: 0 !important;
+}
+
+.filtro-categoria {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 10px 18px !important;
+    min-height: 40px !important;
+
+    border: 1px solid #c0a062 !important;
+    border-radius: 4px !important;
+
+    background: transparent !important;
+    color: #c0a062 !important;
+
+    font-family: "Montserrat", Arial, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.filtro-categoria:hover {
+    background: #c0a062 !important;
+    color: #18191b !important;
+}
+
+.filtro-categoria.ativo {
+    background: #c0a062 !important;
+    color: #18191b !important;
 }
