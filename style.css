@@ -671,7 +671,44 @@ a {
     margin-top: 20px;
 }
 
+/* =====================================================
+   SERVIÇOS - CELULAR
+===================================================== */
 
+@media (max-width: 768px) {
+
+    .service-categories {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .category-card {
+        min-height: 190px;
+        padding: 18px 10px;
+    }
+
+    .category-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .category-card h3 {
+        font-size: 21px;
+        margin-bottom: 6px;
+    }
+
+    .category-card p {
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .category-card span {
+        font-size: 9px;
+        margin-top: 12px;
+    }
+}
 /* =====================================================
    NAIARA
 ===================================================== */
