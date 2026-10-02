@@ -346,9 +346,6 @@ a {
 
     color: var(--white);
 
-    /*
-       UMA ÚNICA LINHA
-    */
     white-space: nowrap;
 
     font-size: clamp(55px, 8.5vw, 125px);
@@ -726,11 +723,6 @@ a {
 
     margin-left: auto;
 }
-
-/*
-   NOVO DESTAQUE DA FOTO
-   Dourado + bronze escuro
-*/
 
 .naiara-photo::before {
     content: "";
@@ -2116,13 +2108,54 @@ a {
         max-width: 280px;
     }
 
+
+    /* =================================================
+       CATEGORIAS NO CELULAR
+       3 CARDS POR LINHA
+    ================================================= */
+
     .service-categories {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
+
+        gap: 8px;
     }
 
     .category-card {
-        min-height: 220px;
+        min-height: 180px;
+
+        padding: 18px 8px;
     }
+
+    .category-icon {
+        width: 45px;
+        height: 45px;
+
+        font-size: 16px;
+
+        margin-bottom: 12px;
+    }
+
+    .category-card h3 {
+        font-size: 19px;
+    }
+
+    .category-card p {
+        font-size: 9px;
+
+        line-height: 1.5;
+    }
+
+    .category-card span {
+        font-size: 8px;
+
+        margin-top: 12px;
+    }
+
+
+    /* =================================================
+       PROCEDIMENTOS NO CELULAR
+       ESTES CONTINUAM SEPARADOS
+    ================================================= */
 
     .catalog-grid {
         grid-template-columns: 1fr;
@@ -2217,51 +2250,76 @@ a {
         display: none;
     }
 }
+
+
 /* =====================================================
    GALERIA DE FOTOS DOS SERVIÇOS
 ===================================================== */
 
 .service-gallery {
     width: 100%;
+
     display: grid;
+
     grid-template-columns: repeat(3, 1fr);
+
     gap: 18px;
+
     margin: 35px 0 45px;
 }
 
 .gallery-item {
     position: relative;
+
     height: 260px;
+
     overflow: hidden;
+
     border-radius: 8px;
+
     background: #111;
-    border: 1px solid rgba(201, 164, 92, 0.25);
+
+    border:
+        1px solid rgba(201, 164, 92, 0.25);
 }
 
 .gallery-item img {
     width: 100%;
+
     height: 100%;
+
     display: block;
+
     object-fit: cover;
-    transition: transform 0.5s ease, filter 0.5s ease;
+
+    transition:
+        transform 0.5s ease,
+        filter 0.5s ease;
 }
+
 
 /* Efeito elegante ao passar o mouse */
 
 .gallery-item::after {
     content: "";
+
     position: absolute;
+
     inset: 0;
-    background: linear-gradient(
-        to top,
-        rgba(0, 0, 0, 0.45),
-        transparent 55%
-    );
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.45),
+            transparent 55%
+        );
+
     pointer-events: none;
 }
 
 .gallery-item:hover img {
     transform: scale(1.05);
+
     filter: brightness(1.08);
 }
 
@@ -2272,9 +2330,13 @@ a {
 
 .footer-address {
     margin-top: 16px;
+
     color: var(--muted);
+
     font-size: 13px;
+
     line-height: 1.7;
+
     font-family: "Montserrat", sans-serif;
 }
 
@@ -2285,13 +2347,17 @@ a {
 
 .developer-credit {
     margin-top: 8px;
+
     color: var(--muted);
+
     font-size: 12px;
+
     letter-spacing: 0.3px;
 }
 
 .developer-credit strong {
     color: var(--gold);
+
     font-weight: 500;
 }
 
@@ -2304,15 +2370,17 @@ a {
 
     .service-gallery {
         grid-template-columns: repeat(3, 1fr);
+
         gap: 10px;
+
         margin: 25px 0 35px;
     }
 
     .gallery-item {
         height: 180px;
+
         border-radius: 6px;
     }
-
 }
 
 
@@ -2320,38 +2388,48 @@ a {
 
     .service-gallery {
         gap: 8px;
+
         margin: 20px 0 30px;
     }
 
     .gallery-item {
         height: 125px;
     }
-
 }
+
+
 /* =====================================================
    FOTO - SPA DOS PÉS
 ===================================================== */
 
 .spa-content {
     display: grid;
+
     grid-template-columns: 1fr 1fr;
+
     gap: 50px;
+
     align-items: center;
 }
 
 .spa-image {
     width: 70%;
+
     height: 380px;
+
     position: relative;
+
     padding: 5px;
+
     margin-left: auto;
 
-    background: linear-gradient(
-        135deg,
-        rgba(201, 164, 92, 0.55),
-        rgba(201, 164, 92, 0.08) 45%,
-        rgba(0, 0, 0, 0.35) 100%
-    );
+    background:
+        linear-gradient(
+            135deg,
+            rgba(201, 164, 92, 0.55),
+            rgba(201, 164, 92, 0.08) 45%,
+            rgba(0, 0, 0, 0.35) 100%
+        );
 
     border-radius: 6px;
 
@@ -2359,6 +2437,7 @@ a {
         0 15px 40px rgba(0, 0, 0, 0.45),
         0 0 25px rgba(201, 164, 92, 0.08);
 }
+
 
 /* =====================================================
    DETALHE DECORATIVO DOURADO - CANTO SUPERIOR
@@ -2383,6 +2462,7 @@ a {
     pointer-events: none;
 }
 
+
 /* =====================================================
    DETALHE DECORATIVO DOURADO - CANTO INFERIOR
 ===================================================== */
@@ -2406,12 +2486,14 @@ a {
     pointer-events: none;
 }
 
+
 /* =====================================================
    IMAGEM
 ===================================================== */
 
 .spa-image img {
     width: 100%;
+
     height: 100%;
 
     display: block;
@@ -2423,6 +2505,7 @@ a {
     transition: transform 0.5s ease;
 }
 
+
 /* =====================================================
    EFEITO AO PASSAR O MOUSE
 ===================================================== */
@@ -2430,6 +2513,7 @@ a {
 .spa-image:hover img {
     transform: scale(1.03);
 }
+
 
 /* =====================================================
    RESPONSIVO
@@ -2439,25 +2523,33 @@ a {
 
     .spa-content {
         grid-template-columns: 1fr;
+
         gap: 30px;
     }
 
     .spa-image {
         height: 350px;
     }
-
 }
-/* LINK DO DESENVOLVEDOR */
+
+
+/* =====================================================
+   LINK DO DESENVOLVEDOR
+===================================================== */
 
 footer p a {
     color: #c9a45c;
+
     text-decoration: none;
+
     transition: color 0.3s ease;
 }
 
 footer p a:hover {
     color: #f0d9a0;
 }
+
+
 /* =====================================================
    TESTE AGENDAMENTO
 ===================================================== */
@@ -2472,9 +2564,12 @@ footer p a:hover {
 
 .cart-drawer.active {
     transform: translateX(0) !important;
+
     visibility: visible !important;
+
     opacity: 1 !important;
 }
+
 
 /* =====================================================
    LINK DA ÁREA ADMINISTRATIVA
@@ -2486,8 +2581,11 @@ footer p a:hover {
 
 .admin-link a {
     color: rgba(255, 255, 255, 0.45);
+
     font-size: 11px;
+
     text-decoration: none;
+
     transition: 0.3s ease;
 }
 
