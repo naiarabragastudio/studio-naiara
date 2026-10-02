@@ -671,44 +671,7 @@ a {
     margin-top: 20px;
 }
 
-/* =====================================================
-   CATEGORIAS DE PROCEDIMENTOS - CELULAR
-===================================================== */
 
-@media (max-width: 768px) {
-
-    .service-categories {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-    }
-
-    .category-card {
-        min-height: 170px;
-        padding: 16px 8px;
-    }
-
-    .category-icon {
-        width: 42px;
-        height: 42px;
-        font-size: 15px;
-        margin-bottom: 10px;
-    }
-
-    .category-card h3 {
-        font-size: 19px;
-        margin-bottom: 5px;
-    }
-
-    .category-card p {
-        font-size: 10px;
-        line-height: 1.4;
-    }
-
-    .category-card span {
-        font-size: 8px;
-        margin-top: 10px;
-    }
-}
 /* =====================================================
    NAIARA
 ===================================================== */
@@ -2152,40 +2115,52 @@ a {
     ================================================= */
 
     .service-categories {
-        grid-template-columns: repeat(3, 1fr);
+        display: grid;
+
+        grid-template-columns: repeat(3, minmax(0, 1fr));
 
         gap: 8px;
+
+        width: 100%;
     }
 
     .category-card {
-        min-height: 180px;
+        min-width: 0;
 
-        padding: 18px 8px;
+        min-height: 155px;
+
+        padding: 14px 6px;
     }
 
     .category-icon {
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
 
-        font-size: 16px;
+        font-size: 15px;
 
-        margin-bottom: 12px;
+        margin-bottom: 8px;
     }
 
     .category-card h3 {
-        font-size: 19px;
+        font-size: 17px;
+
+        line-height: 1.1;
+
+        margin-bottom: 5px;
     }
 
     .category-card p {
-        font-size: 9px;
+        font-size: 8px;
 
-        line-height: 1.5;
+        line-height: 1.4;
     }
 
     .category-card span {
-        font-size: 8px;
+        font-size: 7px;
 
-        margin-top: 12px;
+        margin-top: 8px;
+
+        letter-spacing: 0.7px;
     }
 
 
